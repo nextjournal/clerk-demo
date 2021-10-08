@@ -1,0 +1,3 @@
+{:paths ["dev"]
+ :deps {io.github.nextjournal/clerk {:mvn/version "0.1.164"}
+        org.clojure/data.csv {:mvn/version "1.0.0"}}}
