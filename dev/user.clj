@@ -11,7 +11,7 @@
 (comment
   ;; Optionally start a file-watcher to automatically refresh notebooks when saved
   (def filewatcher
-    (beholder/watch #(clerk/file-event %) "notebooks"))
+    (beholder/watch #(clerk/file-event %) "notebooks" "src"))
 
   (beholder/stop filewatcher)
 
@@ -20,6 +20,8 @@
   (clerk/show! "notebooks/viewer_api.clj")
   (clerk/show! "notebooks/rule_30.clj")
   (clerk/show! "notebooks/elements.clj")
+  (clerk/show! "notebooks/pagination.clj")
+  (clerk/show! "notebooks/how_clerk_works.clj")
 
   (clerk/show! "notebooks/viewers/html.clj")
   (clerk/show! "notebooks/viewers/markdown.clj")

@@ -1,3 +1,7 @@
 {:paths ["dev"]
- :deps {io.github.nextjournal/clerk {:mvn/version "0.1.164"}
-        org.clojure/data.csv {:mvn/version "1.0.0"}}}
+ :deps {io.github.nextjournal/clerk        {:mvn/version "0.1.164"}
+
+        com.github.seancorfield/next.jdbc  {:mvn/version "1.2.659"}
+        scicloj/tablecloth                 {:mvn/version "6.012"}
+        org.clojure/data.csv               {:mvn/version "1.0.0"}
+        org.xerial/sqlite-jdbc             {:mvn/version "3.34.0"}}}
