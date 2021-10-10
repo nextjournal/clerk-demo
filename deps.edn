@@ -1,5 +1,5 @@
 {:paths ["dev"]
- :deps {io.github.nextjournal/clerk        {:mvn/version "0.1.164"}
+ :deps {io.github.nextjournal/clerk        {:mvn/version "0.1.174"}
 
         com.github.seancorfield/next.jdbc  {:mvn/version "1.2.659"}
         scicloj/tablecloth                 {:mvn/version "6.012"}
