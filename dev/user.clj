@@ -1,31 +1,24 @@
-(require
- '[clojure.java.browse :as browse]
- '[nextjournal.clerk.webserver :as webserver]
- '[nextjournal.clerk :as clerk]
- '[nextjournal.beholder :as beholder])
-
-(def port 7777)
-
-(webserver/start! {:port port})
+(ns user
+  (:require [nextjournal.clerk :as clerk]))
 
 (comment
-  ;; Optionally start a file-watcher to automatically refresh notebooks when saved
-  (def filewatcher
-    (beholder/watch #(clerk/file-event %) "notebooks" "src"))
+  ;; start without file watcher, open browser when started
+  (clerk/serve! {:browse? true})
 
-  ;; and stop it again
-  (beholder/stop filewatcher)
+  ;; start with file watcher
+  (clerk/serve! {:watch-paths ["notebooks" "src"]})
+
+  ;; start with file watcher and show filter function to enable notebook pinning
+  (clerk/serve! {:watch-paths ["notebooks" "src"] :show-filter-fn #(clojure.string/starts-with? % "notebooks")})
 
   ;; open clerk
   (browse/browse-url (str "http://localhost:" port))
 
   ;; or call `clerk/show!` explicitly
-  (clerk/show! "notebooks/introduction.clj")
-  (clerk/show! "notebooks/viewer_api.clj")
   (clerk/show! "notebooks/rule_30.clj")
-  (clerk/show! "notebooks/elements.clj")
-  (clerk/show! "notebooks/pagination.clj")
+  (clerk/show! "notebooks/viewer_api.clj")
   (clerk/show! "notebooks/how_clerk_works.clj")
+  (clerk/show! "notebooks/pagination.clj")
   (clerk/show! "notebooks/tablecloth.clj")
 
   (clerk/show! "notebooks/viewers/html.clj")
@@ -35,10 +28,9 @@
   (clerk/show! "notebooks/viewers/tex.clj")
   (clerk/show! "notebooks/viewers/vega.clj")
 
-  ;; produce a static build of some notebooks
-  ;; ⚠️ warning: this inlines the results.
-  ;; This means it's currently only for small results.
-  (clerk/build-static-app! {:paths (concat
-                                    ["notebooks/rule_30.clj"]
-                                    (map #(str "notebooks/viewers/" % ".clj") '[html markdown plotly tex vega]))})
+  ;; produce a static app
+  (clerk/build-static-app! {:paths (mapv #(str "notebooks/" % ".clj")
+                                         '[rule_30 viewer_api how_clerk_works pagination tablecloth
+                                           viewers/html viewers/markdown viewers/plotly viewers/tex viewers/vega])})
+
   )
