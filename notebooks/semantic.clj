@@ -33,8 +33,9 @@
 ;; Ah, better. 😊 This ceremony is required because WikiData uses a
 ;; language-neutral data representation internally, leaving us with an
 ;; extra step to get readable results. This can be a little annoying,
-;; but it does have benefits. For example, we can ask for labels in
-;; every language for which there's a fact in WikiData:
+;; but it does have benefits. For example, we can ask for an entity's
+;; label in every language for which it has been specified in
+;; WikiData:
 
 (query '[:select ?what ?label
          :where [[?what (wdt :discoverer-or-inventor) (entity "James Clerk Maxwell")]
