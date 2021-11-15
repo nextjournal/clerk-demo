@@ -1,7 +1,10 @@
 {:paths ["dev"]
- :deps {io.github.nextjournal/clerk        {:mvn/version "0.2.209"}
+ :deps {io.github.nextjournal/clerk        {:mvn/version "0.3.233"}
 
         com.github.seancorfield/next.jdbc  {:mvn/version "1.2.659"}
         scicloj/tablecloth                 {:mvn/version "6.012"}
         org.clojure/data.csv               {:mvn/version "1.0.0"}
-        org.xerial/sqlite-jdbc             {:mvn/version "3.34.0"}}}
+        org.xerial/sqlite-jdbc             {:mvn/version "3.34.0"}
+        jackrusher/mundaneum               {:git/url "https://github.com/jackrusher/mundaneum/"
+                                            :git/sha "84476918ee47b66a2d6128e1a90780e52fd2ae44"}
+        arrowic/arrowic                    {:mvn/version "0.1.1"}}}

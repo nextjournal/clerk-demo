@@ -20,6 +20,7 @@
   (clerk/show! "notebooks/how_clerk_works.clj")
   (clerk/show! "notebooks/pagination.clj")
   (clerk/show! "notebooks/tablecloth.clj")
+  (clerk/show! "notebooks/semantic.clj")
 
   (clerk/show! "notebooks/viewers/html.clj")
   (clerk/show! "notebooks/viewers/markdown.clj")
@@ -28,9 +29,11 @@
   (clerk/show! "notebooks/viewers/tex.clj")
   (clerk/show! "notebooks/viewers/vega.clj")
 
+  (clerk/show! "src/arslonga/core.clj")
   ;; produce a static app
   (clerk/build-static-app! {:paths (mapv #(str "notebooks/" % ".clj")
                                          '[rule_30 viewer_api how_clerk_works pagination tablecloth
                                            viewers/html viewers/markdown viewers/plotly viewers/tex viewers/vega])})
 
   )
+
