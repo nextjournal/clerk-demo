@@ -54,6 +54,8 @@
                         [?whom (wdt :occupation) (entity "physicist")]]
                 :limit 500])))
 
+;; ## Tabular data
+
 ;; It's great that we can retrieve this information as a sequence of
 ;; maps that we can explore interactively in Clerk, but sometimes it's
 ;; more pleasant to display data organized in a table view:
@@ -68,6 +70,8 @@
 (clerk/table (->> inventions-and-discoveries
                   (group-by :whomLabel)
                   (mapv (fn [[whom whats]] [whom (apply str (interpose " ; " (map :whatLabel whats)))]))))
+
+;; ## Geospatial data
 
 ;; Some data are more naturally viewed in other ways, of course. In
 ;; this example we find every instance of any subclass of "human
@@ -140,6 +144,8 @@
                     [:td [:img {:src (wiki-image (:range %))}]]))
      (into [:table])
      clerk/html)
+
+;; ## Network diagrams
 
 ;; Another useful technique when dealing with semantic or graph-shaped
 ;; data is to visualize the results as a tree. Here we gather all the
