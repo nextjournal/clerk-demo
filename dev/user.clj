@@ -22,8 +22,7 @@
   ;; * take some summary stats
   ;; * graph a few things
   ;; could use setosa, or maybe grab a more interesting data set?
-  (clerk/show! "notebooks/viewers/table.clj")
-
+  (clerk/show! "notebooks/data_science.clj")
   (clerk/show! "notebooks/rule_30.clj")
   (clerk/show! "notebooks/semantic.clj")
   
