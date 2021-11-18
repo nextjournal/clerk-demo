@@ -104,14 +104,14 @@
 ;; the Germanic migrations:
 
 (v/vl {:width 650 :height 650
-         :config {:projection {:type "mercator" :center [10.4515 51.1657]}}
-         :layer [{:data {:url "https://raw.githubusercontent.com/deldersveld/topojson/master/countries/germany/germany-regions.json"
-                         :format {:type "topojson" :feature "DEU_adm2"}}                
-                  :mark {:type "geoshape" :fill "lightgray" :stroke "white"}}
-                 {:encoding {:longitude {:field "longitude" :type "quantitative"}
-                             :latitude {:field "latitude" :type "quantitative"}}
-                  :mark "circle"
-                  :data {:values slavic-place-names}}]})
+       :config {:projection {:type "mercator" :center [10.4515 51.1657]}}
+       :layer [{:data {:url "https://raw.githubusercontent.com/deldersveld/topojson/master/countries/germany/germany-regions.json"
+                       :format {:type "topojson" :feature "DEU_adm2"}}
+                :mark {:type "geoshape" :fill "lightgray" :stroke "white"}}
+               {:encoding {:longitude {:field "longitude" :type "quantitative"}
+                           :latitude {:field "latitude" :type "quantitative"}}
+                :mark "circle"
+                :data {:values slavic-place-names}}]})
 
 ;; Sometimes the data needs a more customized view. Happily, we can
 ;; write arbitrary hiccup to be rendered in Clerk. First, we'll make a
@@ -160,19 +160,20 @@
 ;; The graph is really huge, so you'll need to scroll around a bit to
 ;; see all the languages.
 
-(clerk/html
- (let [data (query '[:select ?itemLabel ?influencedByLabel
-                     :where [[?item (wdt :influenced-by) * (entity "Lisp")
-                              _ (wdt :influenced-by) ?influencedBy]
-                             [?influencedBy (wdt :influenced-by) * (entity "Lisp")]]])]
-   (arr/as-svg
-    (arr/with-graph (arr/create-graph)
-      (let [vertex (->> (mapcat (juxt :itemLabel :influencedByLabel) data)
-                        distinct
-                        (reduce #(assoc %1 %2 (arr/insert-vertex! %2)) {}))]
-        (doseq [edge data]
-          (when (:influencedByLabel edge)
-            (arr/insert-edge! (vertex (:influencedByLabel edge))
-                              (vertex (:itemLabel edge))))))))))
+(-> (clerk/html
+     (let [data (query '[:select ?itemLabel ?influencedByLabel
+                         :where [[?item (wdt :influenced-by) * (entity "Lisp")
+                                  _ (wdt :influenced-by) ?influencedBy]
+                                 [?influencedBy (wdt :influenced-by) * (entity "Lisp")]]])]
+       (arr/as-svg
+        (arr/with-graph (arr/create-graph)
+          (let [vertex (->> (mapcat (juxt :itemLabel :influencedByLabel) data)
+                            distinct
+                            (reduce #(assoc %1 %2 (arr/insert-vertex! %2)) {}))]
+            (doseq [edge data]
+              (when (:influencedByLabel edge)
+                (arr/insert-edge! (vertex (:influencedByLabel edge))
+                                  (vertex (:itemLabel edge))))))))))
+    (assoc :nextjournal/width :full))
 
 ;; I hope this gives you some ideas about things you might want to try!

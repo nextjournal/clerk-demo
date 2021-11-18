@@ -1,5 +1,5 @@
 {:paths ["dev"]
- :deps {io.github.nextjournal/clerk        {:mvn/version "0.3.233"}
+ :deps {io.github.nextjournal/clerk        {:git/sha "ef3f68601b336e1e7843ae99c5babf023493b7b8"}
 
         com.github.seancorfield/next.jdbc  {:mvn/version "1.2.659"}
         org.clojure/data.csv               {:mvn/version "1.0.0"}

@@ -11,8 +11,7 @@
   ;; start with file watcher and show filter function to enable notebook pinning
   (clerk/serve! {:watch-paths ["notebooks" "src"] :show-filter-fn #(clojure.string/starts-with? % "notebooks")})
 
-  ;; open clerk
-  (browse/browse-url (str "http://localhost:" port))
+  (clerk/clear-cache!)
 
   ;; or call `clerk/show!` explicitly
   (clerk/show! "notebooks/introduction.clj") ; combine with "hello" and make a nice intro
@@ -25,7 +24,7 @@
   (clerk/show! "notebooks/data_science.clj")
   (clerk/show! "notebooks/rule_30.clj")
   (clerk/show! "notebooks/semantic.clj")
-  
+
   ;; if you want to know more of the details about how it works and
   ;; why it's reasonably fast
   (clerk/show! "notebooks/how_clerk_works.clj")
@@ -47,4 +46,3 @@
                                            viewers/html viewers/markdown viewers/plotly viewers/tex viewers/vega])})
 
   )
-
