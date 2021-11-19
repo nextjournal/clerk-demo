@@ -12,6 +12,8 @@
   ;; a subset of notebooks
   (clerk/serve! {:watch-paths ["notebooks" "src"] :show-filter-fn #(clojure.string/starts-with? % "notebooks")})
 
+  (clerk/clear-cache!)
+
   ;; or call `clerk/show!` explicitly
   (clerk/show! "notebooks/introduction.clj") ; combine with "hello" and "pagination" to make a nice intro
   (clerk/show! "notebooks/pagination.clj")
@@ -39,4 +41,3 @@
                                          '[introduction data_science rule_30 semantic])})
 
   )
-
