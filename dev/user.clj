@@ -26,9 +26,8 @@
   ;; could use setosa, or maybe grab a more interesting data set?
   (clerk/show! "notebooks/data_science.clj")
 
-  (clerk/show! "notebooks/sicmutils.clj")
-
   ;; done
+  (clerk/show! "notebooks/sicmutils.clj")
   (clerk/show! "notebooks/rule_30.clj")
   (clerk/show! "notebooks/semantic.clj")
   

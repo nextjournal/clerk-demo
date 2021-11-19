@@ -28,8 +28,17 @@
 
 
 ;; ### 🧮 TeX
-;; The TeX viewer is built on [KaTeX](https://katex.org/).
-(clerk/tex "f^{\\circ n} = \\underbrace{f \\circ f \\circ \\cdots \\circ f}_{n\\text{ times}}.\\,")
+
+;;The TeX viewer is built on [KaTeX](https://katex.org/),
+;; so we can easily typeset Maxwell's equations in differential form:
+(clerk/tex "
+\\begin{alignedat}{2}
+  \\nabla\\cdot\\vec{E} = \\frac{\\rho}{\\varepsilon_0} & \\qquad \\text{Gauss' Law} \\\\
+  \\nabla\\cdot\\vec{B} = 0 & \\qquad \\text{Gauss' Law ($\\vec{B}$ Fields)} \\\\
+  \\nabla\\times\\vec{E} = -\\frac{\\partial \\vec{B}}{\\partial t} & \\qquad \\text{Faraday's Law} \\\\
+  \\nabla\\times\\vec{B} = \\mu_0\\vec{J}+\\mu_0\\varepsilon_0\\frac{\\partial\\vec{E}}{\\partial t} & \\qquad \\text{Ampere's Law}
+\\end{alignedat}
+")
 
 
 ;; ### 📊 Plotly
