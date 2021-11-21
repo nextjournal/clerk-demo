@@ -8,8 +8,7 @@
         dk.ative/docjure                   {:mvn/version "1.16.0"}
 
         ;; SICM utils numerical and physics routines
-        sicmutils/sicmutils {:git/url "https://github.com/sicmutils/sicmutils"
-                             :sha "8658c0c8883b8225a742b9422061f40b852f375d"}
+        sicmutils/sicmutils                {:mvn/version "0.20.0"}
         
         ;; semantic web goodies and box/arrow graphs
         jackrusher/mundaneum               {:git/url "https://github.com/jackrusher/mundaneum/"
