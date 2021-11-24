@@ -318,6 +318,7 @@
 
 (defn system-inspector [data]
   {:config {:bar {:binSpacing 1, :discreteBandSize 5, :continuousBandSize 5}},
+   :datasets {:points data}
    :background "floralwhite",
    :vconcat [{:hconcat [{:layer (mapv (partial deep-merge
                                                {:encoding {:y {:field "y", :type "quantitative"},
@@ -355,7 +356,7 @@
                          :mark {:type "circle"},
                          :width 400,
                          :height 300,
-                         :data {:values data}}]}
+                         :data {:name :points}}]}
              {:hconcat (mapv (partial deep-merge {:encoding {:y {:field :unassigned,
                                                                  :type "quantitative",
                                                                  :scale {:domain [(- Math/PI) Math/PI]}},
@@ -369,7 +370,7 @@
                                                   :mark {:type "circle"},
                                                   :width 400,
                                                   :height 300,
-                                                  :data {:values data}})
+                                                  :data {:name :points}})
                              [{:encoding {:y {:field :theta1},
                                           :tooltip [{:field :theta1}]}}
                               {:encoding {:y {:field :theta2},
@@ -402,8 +403,9 @@
                       :mark {:type "circle"}
                       :width 400
                       :height 300
-                      :data {:values data}}]
+                      :data {:name :points}}]
     {:config {:bar {:binSpacing 1 :discreteBandSize 5 :continuousBandSize 5}}
+     :datasets {:points data}
      :background "floralwhite"
      :width 800
      :height 600
@@ -495,18 +497,3 @@
 
 (peek raw-dd-regular-data)
 
-
-#_(clerk/vl
- {:data {:values worker-ceo-ratio}
-  :mark "rect"
-  :width 700
-  :height 500
-  :encoding {:x {:bin {:maxbins 40}
-                 :field :Compensation
-                 :axis {:labelAngle -45}
-                 :type "quantitative"}
-             :y {:bin {:maxbins 40}
-                 :field :Median-Worker-Pay
-                 :type "quantitative"}
-             :color {:aggregate "count" :type "quantitative"}}
-  :config {:view {:stroke "transparent"}}})
