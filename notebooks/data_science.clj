@@ -1,80 +1,234 @@
 ;; # A small data science example 🔢
+^{:nextjournal.clerk/visibility #{:hide-ns}}
 (ns data-science
-  (:require [meta-csv.core :as csv]
+  (:require [clojure.string :as str]
+            [clojure.set :refer [join rename-keys project]]
+            [meta-csv.core :as csv]
             [next.jdbc.sql :as sql]
             [next.jdbc :as jdbc]
+            [next.jdbc.result-set :as rs]
             [dk.ative.docjure.spreadsheet :as ss]
             [nextjournal.clerk :as clerk]))
 
-;; cia-factbook.tsv
-;; earnings-by-school.tsv
-;; wall-street-commute-times.tsv
-;; worker-ceo-ratio.tsv
+;; # Exploring the world in data
 
-#_(def query-results
-  (let [_run-at #inst "2021-05-20T08:28:29.445-00:00" ; bump this to re-run the query!
-        ds (jdbc/get-datasource {:dbtype "sqlite" :dbname "./datasets/chinook.db"})]
-    (with-open [conn (jdbc/get-connection ds)]
-      (clerk/table (jdbc/execute! conn ["SELECT Name, TrackID, AlbumId, UnitPrice FROM tracks"])))))
+;; One of the challenges in real data science is getting data from
+;; different sources in many different formats. In this notebook, we
+;; will explore some facts about the world using data taken from a TSV
+;; file, an Excel spreadsheet, and a database query.
 
-#_(clerk/table
- (csv/read-csv (slurp "https://gist.githubusercontent.com/netj/8836201/raw/6f9306ad21398ea43cba4f7d537619d0e07d5ae3/iris.csv")))
+;; ## Life expectancy
 
-#_(clerk/clear-cache!)
+;; First, we'll read in a TSV file containing the most recent CIA
+;; World Factbook data using the
+;; [meta-csv](https://github.com/ngrunwald/meta-csv) library.
+(def cia-factbook
+  (csv/read-csv "./datasets/cia-factbook.tsv"))
 
-(def worker-ceo-ratio
-  (csv/read-csv "./datasets/worker-ceo-ratio.tsv"))
+;; Expanding the results in the data viewer tells us that there are
+;; some `nil` values in columns of interest, and that our TSV importer
+;; was thrown off by this fact and so didn't convert the numerical
+;; columns to number types.
 
-#_(clerk/vl
- {:data {:values worker-ceo-ratio}
-  :width 700
-  :height 500
-  :mark "bar"
-  :encoding {:x {:bin {:maxbins 20}
-                 :axis {:labelAngle -45}
-                 :field :Compensation}
-             :y {:aggregate "count"}}})
+;; We're going to post process this table a bit with ordinary Clojure
+;; sequence functions to filter out rows that have `nil`s for our
+;; columns of interest, select those rows, convert strings to numbers,
+;; and — because we're Clojurists — convert keys to keywords.
 
-#_(clerk/vl
- {:data {:values worker-ceo-ratio}
-  :width 700
-  :height 500
-  :mark "bar"
-  :encoding {:x {:bin {:maxbins 20}
-                 :axis {:labelAngle -45}
-                 :field "Median Worker Pay"}
-             :y {:aggregate "count"}}})
+(def life-expectancy
+  (->> cia-factbook
+       (remove #(some nil? (map (partial get %) ["Country" "GDP/cap" "Life expectancy"])))
+       (map #(sorted-map :country (str/trim (get % "Country"))
+                         :gdp (read-string (get % "GDP/cap"))
+                         :life-expectancy (read-string (get % "Life expectancy"))))))
 
+;; Things look pretty good in the data structure browser, but it would
+;; be easier to get an overview in tabular form. Luckily, Clerk's
+;; built in table viewer is able to infer how to handle all of the
+;; most common configurations of rows and columns automatically.
+
+(clerk/table life-expectancy)
+
+;; We can also graph the data to see if there are any visible
+;; correlation between our two variables of interest, GDP per capita
+;; and life expectancy.
 (clerk/vl
- {:data {:values worker-ceo-ratio}
+ {:data {:values life-expectancy}
+  :width 700
+  :height 500
+  :mark {:type "point"
+         :tooltip {:field "Country"}}
+  :encoding {:x {:field :gdp
+                 :type :quantitative}
+             :y {:field :life-expectancy
+                 :type :quantitative}}})
+
+;; Unsurprisingly, it seems that living in an extremely poor country
+;; has negative consequences for life expectancy. On the other hand,
+;; it looks like things start to flatten out once GDP/capita goes
+;; above $10-15k/year. Some other interesting patterns also emerge:
+;; Singapore and Japan have similar life expectancies, despite the
+;; former's GDP being twice the latter's, and Qatar — the richest
+;; nation in the dataset by GDP/capita — has similar average life
+;; expectancy as the Dominican Republic.
+
+;; ## Inequality
+
+;; Now, let's try the same experiment using information from a
+;; spreadsheet containing the GINI coefficient — a widely used measure
+;; of income inequality — for each country. We're going to use a
+;; library called [Docjure](https://github.com/mjul/docjure) that
+;; provides access to Microsoft Office file formats.
+
+;; Docjure's API is a bit low-level and doesn't make the obvious tasks
+;; easy, so we're going to use this helper function to make the code
+;; below clearer. Check out the line-by-line comments to see how this
+;; function works.
+(defn load-first-sheet
+  "Return the first sheet of an Excel spreadsheet as a seq of maps."
+  [filename]
+  (let [rows (->> (ss/load-workbook filename) ; load the file
+                  (ss/sheet-seq)              ; seq of sheets in the file
+                  first                       ; take the first (only)
+                  ss/row-seq                  ; get the rows from it
+                  (mapv ss/cell-seq))         ; each row -> seq of cells
+        ;; break off the headers to produce a seq of maps
+        headers   (mapv (comp keyword ss/read-cell) (first rows))]
+    ;; map over the rows creating new maps with the headers as keys
+    (mapv #(zipmap headers (map ss/read-cell %)) (rest rows))))
+
+;; Now we're going to use a few lines of code to:
+;; 1. Load the spreadsheet data.
+;; 2. Use `clojure.set`'s `join` function to combine our freshly
+;; loaded GINI spreadsheet with our previously prepared life
+;; expectancy data, which works because they are both sequences of
+;; maps that have a `:country` key.
+;; 3. Assoc a `:gini` key in each map to the World Bank's number, but
+;; falling back to the CIA's estimate. (These kinds of small
+;; programmatic tasks are a constant feature of data wrangling.)
+(def expectancy-and-gini
+  (->> (load-first-sheet "datasets/countries-gini.xlsx")
+       (join life-expectancy)
+       (keep #(if-let [gini (or (:giniWB %) (:giniCIA %))]
+                (assoc % :gini gini)
+                nil))))
+
+;; Expanding the Clojure data structures makes it look like this will
+;; work for our comparisons. Let's plot the data to see a list of
+;; countries from most to least equal:
+(clerk/vl
+ {:data {:values expectancy-and-gini}
+  :width 600
+  :height 1600
+  :mark {:type "point"
+         :tooltip {:field :country}}
+  :encoding {:x {:field :gini
+                 :type :quantitative}
+             :y {:field :country
+                 :type :nominal
+                 :sort "x"}}})
+
+;; And now to have a look at whether inequality and life expectancy
+;; are correlated:
+(clerk/vl
+ {:data {:values expectancy-and-gini}
   :mark "rect"
   :width 700
   :height 500
-  :encoding {:x {:bin {:maxbins 40}
-                 :field :Compensation
-                 :axis {:labelAngle -45}
+  :encoding {:x {:bin {:maxbins 25}
+                 :field :life-expectancy
                  :type "quantitative"}
-             :y {:bin {:maxbins 40}
-                 :field :Median-Worker-Pay
+             :y {:bin {:maxbins 25}
+                 :field :gini
                  :type "quantitative"}
              :color {:aggregate "count" :type "quantitative"}}
   :config {:view {:stroke "transparent"}}})
 
+;; It seems like the mass of long lived countries are also in the
+;; lower two thirds of the inequality distribution. A little filtering
+;; shows is that the only really long-lived countries above a GINI
+;; coefficient of ~50 is Hong Kong.
 
+(clerk/table
+ (->> (filter #(< 50 (:gini %)) expectancy-and-gini)
+      (sort-by :life-expectancy)))
 
-;; load some data using
-;; https://github.com/mjul/docjure
+;; ## Happiness
 
-#_(->> (ss/load-workbook "spreadsheet.xlsx")
-       (ss/select-sheet "Price List")
-       (ss/select-columns {:A :name, :B :price}))
+;; Let's look at happiness! This time, we'll use
+;; [jdbc.next](https://github.com/seancorfield/next-jdbc) to perform a
+;; SQL query on a Sqlite data containing a table of countries and
+;; their relative happiness ratings. Note that we're changing the
+;; column name `:country_or_region` to `:country` using
+;; `clojure.set`'s `rename-keys` function so that this table will be
+;; easy to join with our others.
+(def world-happiness
+  (let [_run-at #inst "2021-11-26T08:28:29.445-00:00" ; bump this to re-run the query!
+        ds (jdbc/get-datasource {:dbtype "sqlite" :dbname "./datasets/happiness.db"})]
+    (->> (with-open [conn (jdbc/get-connection ds)]
+           (jdbc/execute! conn ["SELECT * FROM happiness"]
+                          {:return-keys true :builder-fn rs/as-unqualified-lower-maps}))
+         (map #(rename-keys % {:country_or_region :country})))))
 
-#_(let [wb (create-workbook "Price List"
-                          [["Name" "Price"]
-                           ["Foo Widget" 100]
-                           ["Bar Widget" 200]])
-      sheet (select-sheet "Price List" wb)
-      header-row (first (row-seq sheet))]
-  (set-row-style! header-row (create-cell-style! wb {:background :yellow,
-                                                     :font {:bold true}}))
-  (save-workbook! "spreadsheet.xlsx" wb))
+;; Looking at the happiness data, it appears that all the usual
+;; suspects — Nordics, Western Europeans, Canadians, and Kiwis — are
+;; living pretty good lives by their own estimation. Looking closer,
+;; we see that although the top twenty countries all relatively
+;; prosperous, it's clear that GDP is not strongly correlated with
+;; happiness _within that cohort_.
+
+(clerk/table world-happiness)
+
+;; Let's graph the relationship between happiness and GDP to get a
+;; bird's eye view on the situation over our entire dataset. You can
+;; mouse over individual data points to get more info:
+
+(clerk/vl
+ {:data {:values world-happiness}
+  :width 700
+  :height 500
+  :mark {:type "point"
+         :tooltip {:field :country}}
+  :encoding {:x {:field :score
+                 :type :quantitative}
+             :y {:field :gdp
+                 :type :quantitative}}})
+
+;; It looks, as we might have expected, like richer countries are
+;; happier than poor ones in general, though with variations and
+;; outliers. For example, Finland is in first place but has a similar
+;; GDP/capita as number 58, Japan. Perhaps even more striking, Qatar
+;; has the highest GDP/capita in the dataset, but Qataris are on
+;; average about as happy as people in El Salvador. Likewise, Botswana
+;; has five times the GDP/capita of Malawi, but its people are no
+;; happier for it. If I were forced to guess why, I might theorize
+;; that a properous country with all of its wealth concentrated in
+;; very few hands can still be a fairly wretched place to live for the
+;; average person.
+
+;; One way to test this theory is to investigate the correlation
+;; between equality and happiness. We'll use `join` again, but we'll
+;; first use `clojure.set`'s `project` (named by analogy to SQL
+;; projection) to pluck just the `:country` and `:score` from the
+;; happiness dataset.
+(clerk/vl
+ {:data {:values (join expectancy-and-gini
+                       (project world-happiness [:country :score]))}
+  :mark "rect"
+  :width 700
+  :height 500
+  :encoding {:x {:bin {:maxbins 20}
+                 :field :score
+                 :type "quantitative"}
+             :y {:bin {:maxbins 20}
+                 :field :gini
+                 :type "quantitative"}
+             :color {:aggregate "count" :type "quantitative"}}
+  :config {:view {:stroke "transparent"}}})
+
+;; This does, at least at first glance, support the notion that the
+;; happiest people — just like the longest lived ones — tend to
+;; inhabit countries in the more equal part of the GINI distribution.
+
+;; I hope this example gives you some ideas about things you'd like to
+;; investigate.

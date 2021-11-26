@@ -15,18 +15,12 @@
   (clerk/clear-cache!)
 
   ;; or call `clerk/show!` explicitly
-  (clerk/show! "notebooks/introduction.clj") ; combine with "hello" and "pagination" to make a nice intro
+  (clerk/show! "notebooks/introduction.clj") ; TODO combine with "hello" and "pagination" to make a nice intro
   (clerk/show! "notebooks/pagination.clj")
-  (clerk/show! "notebooks/viewer_api.clj") ; expand or combine with intro?
-
-  ;; make a notebook for simple "data science" stuff, maybe using kixi?
-  ;; * read a CSV
-  ;; * take some summary stats
-  ;; * graph a few things
-  ;; could use setosa, or maybe grab a more interesting data set?
-  (clerk/show! "notebooks/data_science.clj")
-
+  (clerk/show! "notebooks/viewer_api.clj") ; TODO expand or combine with intro?
+  
   ;; done
+  (clerk/show! "notebooks/data_science.clj")
   (clerk/show! "notebooks/sicmutils.clj")
   (clerk/show! "notebooks/rule_30.clj")
   (clerk/show! "notebooks/semantic.clj")
