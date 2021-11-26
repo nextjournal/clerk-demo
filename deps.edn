@@ -1,5 +1,5 @@
 {:paths ["dev"]
- :deps {io.github.nextjournal/clerk        {:git/sha "ef3f68601b336e1e7843ae99c5babf023493b7b8"}
+ :deps {io.github.nextjournal/clerk        {:git/sha "54ca8472961aec56bcb97a852af763c78aae4630"}
 
         ;; input various external data formats
         com.github.seancorfield/next.jdbc  {:mvn/version "1.2.659"}
@@ -9,11 +9,10 @@
 
         ;; some statistical routines
         kixi/stats {:mvn/version "0.5.4"}
-        
+
         ;; SICM utils numerical and physics routines
-        sicmutils/sicmutils {:git/url "https://github.com/sicmutils/sicmutils"
-                             :sha "8658c0c8883b8225a742b9422061f40b852f375d"}
-        
+        sicmutils/sicmutils {:mvn/version "0.20.1"}
+
         ;; semantic web goodies and box/arrow graphs
         jackrusher/mundaneum               {:git/url "https://github.com/jackrusher/mundaneum/"
                                             :git/sha "84476918ee47b66a2d6128e1a90780e52fd2ae44"}
