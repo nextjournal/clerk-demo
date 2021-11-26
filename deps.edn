@@ -1,5 +1,5 @@
 {:paths ["dev"]
- :deps {io.github.nextjournal/clerk        {:git/sha "54ca8472961aec56bcb97a852af763c78aae4630"}
+ :deps {io.github.nextjournal/clerk        {:git/sha "cb6d63e98d36bdb70d50607a99cac7fc608573df"}
 
         ;; input various external data formats
         com.github.seancorfield/next.jdbc  {:mvn/version "1.2.659"}
