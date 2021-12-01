@@ -5,25 +5,53 @@
             [babashka.fs :as fs]))
 
 ;; Clerk enables a *rich*, local-first notebook experience using
-;; standard Clojure namespaces and markdown files with Clojure code
-;; fences. For example, this text is rendered from some markdown
-;; written in a comment block.
+;; standard Clojure namespaces and Markdown files with Clojure code
+;; fences. You bring your own editor and workflow, your own
+;; interactive computing habits, and Clerk enhances all of that with
+;; literate programming and rich visualizations.
 
-;; If you start a file watcher on a directory tree containing `clj` or
-;; `md` files, Clerk will automatically watch for changes and show you
-;; the must recently changed one. To make this performant enough to
-;; feel good, Clerk caches computations it must perform while
-;; evaluating the forms in any given file. Likewise, to make sure we
-;; don't send too much data to the browser we perform pagination by
-;; default on data returned by your computations.
+;; Inside `clj` files, comment blocks are interpreted as prose written
+;; in an extended dialect of Markdown. Clerk supports inline TeX, so
+;; we can insert the [Euler–Lagrange equation](https://en.wikipedia.org/wiki/Euler–Lagrange_equation)
+;; quite easily:
+
+;; $${\frac{d}{d t} \frac{∂ L}{∂ \dot{q}}}-\frac{∂ L}{∂ q}=0.$$
+
+;; When Clerk interprets an `md` file, the relationship between code
+;; blocks and prose is reversed. Instead of the file being code by
+;; default with prose in comment blocks, it will be treated as
+;; Markdown by default with Clojure code in code fences. Clerk's code
+;; fences have a twist, though: they evaluate their contents.
+
+;; There are loads of other goodies to share, most of which we'll see
+;; a bit farther down the page.
+
+;; ## Operation
+
+;; You can load, evaluate, and present a file with the `clerk/show!`
+;; function, but in most cases it's easier to start a file watcher
+;; with something like:
+
+^{:nextjournal.clerk/visibility #{:hide}}
+(clerk/code '(clerk/serve! {:watch-paths ["notebooks" "src"]}))
+
+;; ... which will automatically reload and re-eval any `clj` or `md`
+;; files that change, displaying the most recently changed one in your
+;; browser.
+
+;; To make this performant enough to feel good, Clerk caches the
+;; computations it performs while evaluating the forms in any
+;; file. Likewise, to make sure it doesn't send too much data to the
+;; browser at once, Clerk paginates data structures within an
+;; interactive viewer.
 
 ;; ## Pagination
 
-;; So, for example, the infinite sequence returned by the call to
-;; `(range)` will be loaded a little bit at a time as you click on the
-;; results. (Note the little underscore under the first paren, it lets
-;; you switch this sequence to a vertical rather than horizontal
-;; view).
+;; As an example, the infinite sequence returned by `(range)` will be
+;; loaded a little bit at a time as you click on the results. (Note
+;; the little underscore under the first paren, it lets you switch
+;; this sequence to a vertical rather than horizontal view).
+
 (range)
 
 ;; Opaque objects are printed as they would be in the Clojure REPL,
@@ -31,15 +59,17 @@
 (def notebooks
   (clojure.java.io/file "notebooks"))
 
-;; ... and you can leave a form at the top-level like this to examine
-;; the result of evaluating it, though you'd probably use your live
+;; You can leave a form at the top-level like this to examine the
+;; result of evaluating it, though you'd probably use your live
 ;; programming environment to do this most of the time.
 (into #{} (map str) (file-seq notebooks))
 
 ;; Sometimes you don't want Clerk to cache a form. You can turn off
-;; caching for a form by placing a piece of metadata before it like
-;; this:
+;; caching for a form by placing a special piece of metadata before
+;; it, like this:
 ^:nextjournal.clerk/no-cache (shuffle (range 100))
+
+#_"TODO show hiding forms and results"
 
 ;; Another useful technique is to put an instant marking the last time
 ;; a form was run. This way you can update this result at any time by
@@ -72,10 +102,13 @@
 
 ;; #### 📑 Markdown
 
-;; The same Markdown support Clerk uses for comment blocks is also available programmatically:
-(clerk/md (clojure.string/join "\n" (map #(str "* _Item_ " (inc %)) (range 3))))
+;; The same Markdown support Clerk uses for comment blocks is also
+;; available programmatically: 
+(clerk/md (clojure.string/join "\n" (map #(str %1 ". " %2) (range 1 4) ["Lambda" "Eval" "Apply"])))
 
-;; #### 👾 Code
+#_ "TODO numbered list style is missing numbers?"
+
+;; #### 🤖 Code
 
 ;; There's a code viewer uses that
 ;; [clojure-mode](https://nextjournal.github.io/clojure-mode/) for
@@ -86,8 +119,8 @@
 
 ;; #### 🧮 TeX
 
-;; All comment blocks can contain TeX (we use
-;; [KaTeX](https://katex.org/) under the covers), and you can also
+;; As we've already seen, all comment blocks can contain TeX (we use
+;; [KaTeX](https://katex.org/) under the covers). In addition, you can
 ;; call the TeX viewer programmatically. Here, for example, are
 ;; Maxwell's equations in differential form:
 (clerk/tex "
@@ -110,22 +143,29 @@
              [:tr [:td "◣"] [:td "◢"]]])
 
 ;; Alternatively you can also just pass an HTML string, perhaps
-;; generated by your code.
-(clerk/html "“A brilliant solution to the wrong problem can be worse than no solution at all: solve the correct problem.”<br/><em>Donald Norman</em>.")
+;; generated by your code:
+(clerk/html "“A brilliant solution to the wrong problem can be worse than no solution at all. Solve the correct problem.”<br/>—<em>Donald Norman</em>")
 
 ;; #### 📊 Plotly
 
-;; Clerk also has built-in support for Plotly's low-ceremony plotting.
+;; Clerk also has built-in support for Plotly's low-ceremony plotting:
 (clerk/plotly {:data [{:z [[1 2 3] [3 2 1]] :type "surface"}]})
 
 ;; #### 📈 Vega Lite
 
-;; But we also have Vega Lite for those who prefer that grammar.
-(clerk/vl {:width 650 :height 400 :data {:url "https://vega.github.io/vega-datasets/data/us-10m.json"
-                                         :format {:type "topojson" :feature "counties"}}
-           :transform [{:lookup "id" :from {:data {:url "https://vega.github.io/vega-datasets/data/unemployment.tsv"}
-                                            :key "id" :fields ["rate"]}}]
-           :projection {:type "albersUsa"} :mark "geoshape" :encoding {:color {:field "rate" :type "quantitative"}}})
+;; But Clerk also has Vega Lite for those who prefer that grammar.
+(clerk/vl {:width 650
+           :height 400
+           :data {:url "https://vega.github.io/vega-datasets/data/us-10m.json"
+                  :format {:type "topojson" :feature "counties"}}
+           :transform [{:lookup "id"
+                        :from {:data {:url "https://vega.github.io/vega-datasets/data/unemployment.tsv"}
+                               :key "id"
+                               :fields ["rate"]}}]
+           :projection {:type "albersUsa"}
+           :mark "geoshape"
+           :encoding {:color {:field "rate"
+                              :type "quantitative"}}})
 
 ;; ### 🚀 Extensibility
 
@@ -133,11 +173,11 @@
 ;; to any form. Here we make our own little viewer to greet James
 ;; Clerk Maxwell:
 (clerk/with-viewer #(v/html [:div "Greetings to " [:strong %] "!"])
-  "James Maxwell Clerk")
+  "James Clerk Maxwell")
 
-;; But we can do more interesting things, like matching numbers and
-;; using them to produce headings, or turning each string into a
-;; paragraph.
+;; But we can do more interesting things, like using a predicate
+;; function to match numbers and turn them into headings, or
+;; converting string into paragraphs.
 (clerk/with-viewers [{:pred number?
                       :render-fn #(v/html [(keyword (str "h" %)) (str "Heading " %)])}
                      {:pred string?
@@ -155,7 +195,7 @@
                                                               :class (if (pos? %) "bg-black" "bg-white border-solid border-2 border-black")}])}]
   (take 10 (repeatedly #(rand-int 2))))
 
-;; Or build your own colour parser and use it to generate swatches:
+;; Or build your own colour parser and then use it to generate swatches:
 (clerk/with-viewers
   [{:pred #(and (string? %)
                 (re-matches
