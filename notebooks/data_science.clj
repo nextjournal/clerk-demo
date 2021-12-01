@@ -190,7 +190,8 @@
   :mark {:type "point"
          :tooltip {:field :country}}
   :encoding {:x {:field :score
-                 :type :quantitative}
+                 :type :quantitative
+                 :scale {:zero false}}
              :y {:field :gdp
                  :type :quantitative}}})
 
@@ -204,27 +205,29 @@
 ;; happier for it. If I were forced to guess why, I might theorize
 ;; that a properous country with all of its wealth concentrated in
 ;; very few hands can still be a fairly wretched place to live for the
-;; average person.
+;; average person to live.
 
-;; One way to test this theory is to investigate the correlation
-;; between equality and happiness. We'll use `join` again, but we'll
-;; first use `clojure.set`'s `project` (named by analogy to SQL
-;; projection) to pluck just the `:country` and `:score` from the
-;; happiness dataset.
+;; One way to investigate this possibility is to plot the correlation
+;; between equality and happiness in the rich world. We'll use `join`
+;; again, but we'll first use `clojure.set`'s `project` (named by
+;; analogy to SQL projection) to pluck just the `:country` and
+;; `:score` from the happiness dataset, then sort by the GDP and take
+;; the top 20 countries.
 (clerk/vl
- {:data {:values (join expectancy-and-gini
-                       (project world-happiness [:country :score]))}
-  :mark "rect"
+ {:data {:values (->> (project world-happiness [:country :score])
+                      (join expectancy-and-gini)
+                      (sort-by :gdp >)
+                      (take 20))}
   :width 700
   :height 500
-  :encoding {:x {:bin {:maxbins 20}
-                 :field :score
-                 :type "quantitative"}
-             :y {:bin {:maxbins 20}
-                 :field :gini
-                 :type "quantitative"}
-             :color {:aggregate "count" :type "quantitative"}}
-  :config {:view {:stroke "transparent"}}})
+  :mark {:type "point"
+         :tooltip {:field :country}}
+  :encoding {:x {:field :score
+                 :type :quantitative
+                 :scale {:zero false}}
+             :y {:field :gini
+                 :type :quantitative
+                 :scale {:zero false}}}})
 
 ;; This does, at least at first glance, support the notion that the
 ;; happiest people — just like the longest lived ones — tend to
