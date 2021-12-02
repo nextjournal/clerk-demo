@@ -15,22 +15,17 @@
   (clerk/clear-cache!)
 
   ;; or call `clerk/show!` explicitly
-  (clerk/show! "notebooks/introduction.clj") ; TODO combine with "hello" and "pagination" to make a nice intro
-  (clerk/show! "notebooks/pagination.clj")
-  (clerk/show! "notebooks/viewer_api.clj") ; TODO expand or combine with intro?
-  
-  ;; done
+  (clerk/show! "notebooks/introduction.clj")
   (clerk/show! "notebooks/data_science.clj")
   (clerk/show! "notebooks/sicmutils.clj")
   (clerk/show! "notebooks/rule_30.clj")
   (clerk/show! "notebooks/semantic.clj")
 
   (clerk/show! "index.md")
-
   
   ;; TODO If you would like more details about how Clerk works, here's a
   ;; notebook with some implementation details.
-  (clerk/show! "notebooks/how_clerk_works.clj")
+  ;; (clerk/show! "notebooks/how_clerk_works.clj")
 
   ;; produce a static app
   (clerk/build-static-app! {:paths (mapv #(str "notebooks/" % ".clj")
