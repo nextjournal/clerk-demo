@@ -21,7 +21,7 @@
  :aliases
  {:nextjournal/clerk
   ;; we might use a version of Clerk which is ahead of main for demo purposes
-  {:override-deps {io.github.nextjournal/clerk {:git/sha "444131ac16b662fab5cedca02303122f1987d4d9"}}
+  {:override-deps {io.github.nextjournal/clerk {:git/sha "99466cea7c9d906fcacfedafd1486a1f655bc66f"}}
    :extra-paths ["datasets"]
    :exec-fn nextjournal.clerk/build-static-app!
    ;; notebooks to be built, accepts globs patterns
