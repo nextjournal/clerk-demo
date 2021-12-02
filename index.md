@@ -12,7 +12,7 @@
     [:div.md:grid.md:gap-8.md:grid-cols-2.pb-8]
     (map
       (fn [{:keys [path preview title description]}]
-        [:a.rounded-lg.shadow-lg.border.border-gray-300.relative.flex.flex-col.hover:border-indigo-600.group
+        [:a.rounded-lg.shadow-lg.border.border-gray-300.relative.flex.flex-col.hover:border-indigo-600.group.mb-8.md:mb-0
          {:href (str "#/" path)
           :style {:height 300}}
          [:div.flex-auto.overflow-hidden.rounded-t-md.flex.items-center.px-3.py-4
