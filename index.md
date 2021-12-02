@@ -19,16 +19,24 @@
           [:img {:src preview :width "100%" :style {:object-fit "contain"}}]]
          [:div.font-bold.sans-serif.border-t.border-gray-300.px-4.py-2.group-hover:border-indigo-600.group-hover:text-indigo-600
           title]])
-      [{:title "Data Science"
+      [{:title "Introduction"
+        :preview "FIXME"
+        :path "notebooks/introduction.clj"
+        :description "A first look at Clerk, including many small usage examples."}
+       {:title "Data Science"
         :preview "https://cdn.nextjournal.com/data/QmcznoqioDQUKbH777pacrT4LDTwqmP1nmw7bfQ7uXrZQh?filename=CleanShot%202021-11-30%20at%2018.19.07@2x.png&content-type=image/png"
-        :path "notebooks/data_science.clj"}
+        :path "notebooks/data_science.clj"
+        :description "An exploration of open data using Clerk."}
        {:title "Semantic Queries"
         :preview "https://cdn.nextjournal.com/data/QmYH2gBYSifEgNJDjGUjVAAaHWt5c4WD6Ko7Be7Be5f4hy?filename=CleanShot%202021-11-30%20at%2018.26.23@2x.png&content-type=image/png"
-        :path "notebooks/semantic.clj"}
+        :path "notebooks/semantic.clj"
+        :description "A starter kit for interactively exploring WikiData's vast semantic database."}
        {:title "The double pendulum"
         :preview "https://cdn.nextjournal.com/data/Qmdhk9WEogAvH9cgehnpq3REkATa91JiWgYNUtoSW74Q9A?filename=CleanShot%202021-11-30%20at%2018.45.46@2x.png&content-type=image/png"
-        :path "notebooks/sicmutils.clj"}
+        :path "notebooks/sicmutils.clj"
+        :description "Simulate and visualize physical systems from the REPL."}
        {:title "Rule 30"
         :preview "https://cdn.nextjournal.com/data/QmQCrqkdYtKfNm9CGbXhzY4cy6qG8xhpWaCRPF5m6biLgV?filename=CleanShot%202021-11-30%20at%2018.46.55@2x.png&content-type=image/png"
-        :path "notebooks/rule_30.clj"}])))
+        :path "notebooks/rule_30.clj"
+        :description ""}])))
 ```
