@@ -4,3 +4,5 @@
 /.lsp/
 /.nrepl-port
 .DS_Store
+.idea
+*.iml

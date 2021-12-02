@@ -6,7 +6,7 @@
   (clerk/serve! {:browse? true})
 
   ;; start with file watcher for these sub-directory paths
-  (clerk/serve! {:watch-paths ["notebooks" "src"]})
+  (clerk/serve! {:watch-paths ["notebooks" "src" "index.md"]})
 
   ;; start with file watcher and a `show-filter-fn` function to watch
   ;; a subset of notebooks
@@ -24,6 +24,9 @@
   (clerk/show! "notebooks/sicmutils.clj")
   (clerk/show! "notebooks/rule_30.clj")
   (clerk/show! "notebooks/semantic.clj")
+
+  (clerk/show! "index.md")
+
   
   ;; TODO If you would like more details about how Clerk works, here's a
   ;; notebook with some implementation details.
