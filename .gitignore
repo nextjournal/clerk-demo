@@ -3,6 +3,7 @@
 /.cpcache/
 /.lsp/
 /.nrepl-port
+public
 .DS_Store
 .idea
 *.iml
