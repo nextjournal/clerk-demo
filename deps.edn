@@ -1,5 +1,5 @@
 {:paths ["dev"]
- :deps {io.github.nextjournal/clerk        {:git/sha "ba194851dd21559351b5af29f168aeaa80c436ff"}
+ :deps {io.github.nextjournal/clerk        {:git/sha "712d92b95fc7883a7109777cba43c2bff8cdfb75"}
 
         ;; input various external data formats
         com.github.seancorfield/next.jdbc  {:mvn/version "1.2.659"}
@@ -16,4 +16,14 @@
         ;; semantic web goodies and box/arrow graphs
         jackrusher/mundaneum               {:git/url "https://github.com/jackrusher/mundaneum/"
                                             :git/sha "84476918ee47b66a2d6128e1a90780e52fd2ae44"}
-        arrowic/arrowic                    {:mvn/version "0.1.1"}}}
+        arrowic/arrowic                    {:mvn/version "0.1.1"}}
+
+ :aliases
+ {:nextjournal/clerk
+  {:extra-paths ["datasets"]
+   :exec-fn nextjournal.clerk/build-static-app!
+   :exec-args {:paths ["index.md"
+                       "notebooks/data_science.clj"
+                       "notebooks/semantic.clj"
+                       "notebooks/sicmutils.clj"
+                       "notebooks/rule_30.clj"]}}}}
