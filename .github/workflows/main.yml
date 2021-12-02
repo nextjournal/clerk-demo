@@ -1,7 +1,5 @@
 name: Continuous Delivery
-
 on: push
-
 jobs:
   bucket-build:
     runs-on: ubuntu-latest
