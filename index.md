@@ -39,5 +39,5 @@
        {:title "Rule 30"
         :preview "https://cdn.nextjournal.com/data/QmQCrqkdYtKfNm9CGbXhzY4cy6qG8xhpWaCRPF5m6biLgV?filename=CleanShot%202021-11-30%20at%2018.46.55@2x.png&content-type=image/png"
         :path "notebooks/rule_30.clj"
-        :description ""}])))
+        :description "Cellular automata meet moldable viewers. 👾"}])))
 ```
