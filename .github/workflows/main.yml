@@ -47,7 +47,7 @@ jobs:
 
       - name: Copy static build to bucket under SHA
         run: |
-          gsutil cp -r public/build gs://nextjournal-snapshots/clerk/build/${{ github.sha }}
+          gsutil cp -r public/build gs://nextjournal-snapshots/clerk-demo/build/${{ github.sha }}
 
       - name: Add status flag to the devcards build
         uses: Sibz/github-status-action@v1
@@ -57,4 +57,4 @@ jobs:
           description: 'Ready'
           state: 'success'
           sha: ${{github.event.pull_request.head.sha || github.sha}}
-          target_url: https://storage.googleapis.com/nextjournal-snapshots/clerk/build/${{ github.sha }}/index.html
+          target_url: https://storage.googleapis.com/nextjournal-snapshots/clerk-demo/build/${{ github.sha }}/index.html
