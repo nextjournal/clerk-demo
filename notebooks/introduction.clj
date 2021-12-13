@@ -77,7 +77,7 @@
 ;; Another useful technique is to put an instant marking the last time
 ;; a form was run. This way you can update this result at any time by
 ;; updating the instant.
-(let [last-run #inst "2021-12-01T16:40:56.048896Z"] ; TODO broken?
+(let [last-run #inst "2021-12-01T16:40:56.048896Z"]
   (shuffle (range 100)))
 
 ;; Like other objects, `UUID`s and `inst`s are rendered as they would
@@ -138,10 +138,8 @@
 ;; #### 📑 Markdown
 
 ;; The same Markdown support Clerk uses for comment blocks is also
-;; available programmatically: 
+;; available programmatically:
 (clerk/md (clojure.string/join "\n" (map #(str %1 ". " %2) (range 1 4) ["Lambda" "Eval" "Apply"])))
-
-#_ "TODO numbered list style is missing numbers?"
 
 ;; #### 🤖 Code
 
@@ -254,8 +252,6 @@
 (.. (HttpClient/newHttpClient)
     (send (.build (HttpRequest/newBuilder (URI. "https://upload.wikimedia.org/wikipedia/commons/5/57/James_Clerk_Maxwell.png")))
           (HttpResponse$BodyHandlers/ofByteArray)) body)
-
-#_ "TODO need to bump Clerk version for this to work?"
 
 ;; This is just a taste of what's possible using Clerk. Take a look in
 ;; the `notebooks` directory to see a collection of worked examples in
