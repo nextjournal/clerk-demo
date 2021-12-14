@@ -23,7 +23,8 @@
   {:extra-paths ["datasets"]
    :exec-fn nextjournal.clerk/build-static-app!
    ;; notebooks to be built, accepts globs patterns
-   :exec-args {:paths ["index.md"
+   :exec-args {:git/url "https://github.com/nextjournal/clerk-demo"
+               :paths ["index.md"
                        "notebooks/introduction.clj"
                        "notebooks/data_science.clj"
                        "notebooks/semantic.clj"

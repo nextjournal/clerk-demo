@@ -41,9 +41,8 @@ jobs:
           path: .cache
           key: ${{ runner.os }}-clerk
 
-
       - name: 🏗 Clerk Build
-        run: clojure -X:nextjournal/clerk :path-prefix '"nextjournal-snapshots/clerk-demo/build/${{ github.sha }}/"' :bundle? false
+        run: clojure -X:nextjournal/clerk :path-prefix '"nextjournal-snapshots/clerk-demo/build/${{ github.sha }}/"' :git/sha '"${{ github.sha }}"'
 
       - name: 📠 Copy static build to bucket under SHA
         run: |
