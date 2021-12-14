@@ -42,13 +42,13 @@ jobs:
           key: ${{ runner.os }}-clerk
 
       - name: 🏗 Clerk Build
-        run: clojure -X:nextjournal/clerk :path-prefix '"nextjournal-snapshots/clerk-demo/build/${{ github.sha }}/"' :git/sha '"${{ github.sha }}"'
+        run: clojure -X:nextjournal/clerk :path-prefix '"clerk-demo/build/${{ github.sha }}/"' :git/sha '"${{ github.sha }}"'
 
       - name: 📠 Copy static build to bucket under SHA
         run: |
           gsutil cp -r public/build gs://nextjournal-snapshots/clerk-demo/build/${{ github.sha }}
 
-      - name: 🚩 Add status flag to the devcards build
+      - name: 🚩 Add success status to the build with a link to the public snapshot URL
         uses: Sibz/github-status-action@v1
         with:
           authToken: ${{secrets.GITHUB_TOKEN}}
@@ -56,4 +56,4 @@ jobs:
           description: 'Ready'
           state: 'success'
           sha: ${{github.event.pull_request.head.sha || github.sha}}
-          target_url: https://storage.googleapis.com/nextjournal-snapshots/clerk-demo/build/${{ github.sha }}/index.html
+          target_url: https://snapshots.nextjournal.com/clerk-demo/build/${{ github.sha }}

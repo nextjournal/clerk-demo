@@ -24,6 +24,7 @@
    :exec-fn nextjournal.clerk/build-static-app!
    ;; notebooks to be built, accepts globs patterns
    :exec-args {:git/url "https://github.com/nextjournal/clerk-demo"
+               :bundle? false
                :paths ["index.md"
                        "notebooks/introduction.clj"
                        "notebooks/data_science.clj"
