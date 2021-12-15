@@ -255,8 +255,6 @@
     (send (.build (HttpRequest/newBuilder (URI. "https://upload.wikimedia.org/wikipedia/commons/5/57/James_Clerk_Maxwell.png")))
           (HttpResponse$BodyHandlers/ofByteArray)) body)
 
-#_ "TODO need to bump Clerk version for this to work?"
-
 ;; This is just a taste of what's possible using Clerk. Take a look in
 ;; the `notebooks` directory to see a collection of worked examples in
 ;; different domains.
