@@ -1,6 +1,6 @@
 ;; # Hello, Clerk 👋
 ^{:nextjournal.clerk/visibility #{:hide-ns}}
-(ns clerk
+(ns introduction
   (:require [nextjournal.clerk :as clerk]
             [nextjournal.clerk.viewer :as v]
             [babashka.fs :as fs]
