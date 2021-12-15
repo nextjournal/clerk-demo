@@ -8,24 +8,24 @@ jobs:
         with:
           fetch_depth: 0
 
-      - name: Set up Cloud SDK
+      - name: ☁ Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@master
         with:
           project_id: "nextjournal-com"
           service_account_key: ${{ secrets.GCLOUD_SERVICE_KEY }}
           export_default_credentials: true
 
-      - name: Install java
+      - name: 🔧 Install java
         uses: actions/setup-java@v1
         with:
           java-version: '11.0.7'
 
-      - name: Install clojure
+      - name: 🔧 Install clojure
         uses: DeLaGuardo/setup-clojure@master
         with:
           cli: '1.10.3.943'
 
-      - name: maven cache
+      - name: 🗝 maven cache
         uses: actions/cache@v2
         with:
           path: |
@@ -41,15 +41,14 @@ jobs:
           path: .cache
           key: ${{ runner.os }}-clerk
 
-
       - name: 🏗 Clerk Build
-        run: clojure -X:nextjournal/clerk
+        run: clojure -X:nextjournal/clerk :path-prefix '"clerk-demo/build/${{ github.sha }}/"' :git/sha '"${{ github.sha }}"'
 
-      - name: Copy static build to bucket under SHA
+      - name: 📠 Copy static build to bucket under SHA
         run: |
-          gsutil cp -r public/build gs://nextjournal-snapshots/clerk/build/${{ github.sha }}
+          gsutil cp -r public/build gs://nextjournal-snapshots/clerk-demo/build/${{ github.sha }}
 
-      - name: Add status flag to the devcards build
+      - name: ✅ Add success status to the build with a link to the public snapshot URL
         uses: Sibz/github-status-action@v1
         with:
           authToken: ${{secrets.GITHUB_TOKEN}}
@@ -57,4 +56,4 @@ jobs:
           description: 'Ready'
           state: 'success'
           sha: ${{github.event.pull_request.head.sha || github.sha}}
-          target_url: https://storage.googleapis.com/nextjournal-snapshots/clerk/build/${{ github.sha }}/index.html
+          target_url: https://snapshots.nextjournal.com/clerk-demo/build/${{ github.sha }}

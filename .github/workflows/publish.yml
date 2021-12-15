@@ -37,7 +37,7 @@ jobs:
           key: ${{ runner.os }}-clerk
 
       - name: 🏗 Clerk Build
-        run: clojure -X:nextjournal/clerk
+        run: clojure -X:nextjournal/clerk :path-prefix '"clerk-demo/"' :git/sha '"${{ github.sha }}"'
 
       - name: 🚀 Deploy
         uses: JamesIves/github-pages-deploy-action@4.1.6

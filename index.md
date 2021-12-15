@@ -1,7 +1,8 @@
 ```clojure
 ^{:nextjournal.clerk/visibility #{:hide :hide-ns}}
 (ns index
-  (:require [nextjournal.clerk :as clerk]))
+  (:require [clojure.string :as str]
+            [nextjournal.clerk :as clerk]))
 ```
 
 # 🎪 Clerk Demo [on GitHub](https://github.com/nextjournal/clerk-demo)
@@ -13,7 +14,7 @@
     (map
       (fn [{:keys [path preview title description]}]
         [:a.rounded-lg.shadow-lg.border.border-gray-300.relative.flex.flex-col.hover:border-indigo-600.group.mb-8.md:mb-0
-         {:href path
+         {:href (clerk/doc-url path)
           :style {:height 300}}
          [:div.flex-auto.overflow-hidden.rounded-t-md.flex.items-center.px-3.py-4
           [:img {:src preview :width "100%" :style {:object-fit "contain"}}]]
@@ -22,22 +23,22 @@
           [:div.text-xs.text-gray-500.group-hover:text-indigo-600.leading-normal description]]])
       [{:title "Introduction"
         :preview "https://cdn.nextjournal.com/data/Qmb7qfVDvgcfeEQrfcPwD1DFipw8TuyW8Rno33NAJSYDjr?filename=introduction.png&content-type=image/png"
-        :path "notebooks/introduction.html"
+        :path "notebooks/introduction.clj"
         :description "A first look at Clerk, including many small usage examples."}
        {:title "Data Science"
         :preview "https://cdn.nextjournal.com/data/QmcznoqioDQUKbH777pacrT4LDTwqmP1nmw7bfQ7uXrZQh?filename=CleanShot%202021-11-30%20at%2018.19.07@2x.png&content-type=image/png"
-        :path "notebooks/data_science.html"
+        :path "notebooks/data_science.clj"
         :description "An exploration of open data using Clerk."}
        {:title "Semantic Queries"
         :preview "https://cdn.nextjournal.com/data/QmYH2gBYSifEgNJDjGUjVAAaHWt5c4WD6Ko7Be7Be5f4hy?filename=CleanShot%202021-11-30%20at%2018.26.23@2x.png&content-type=image/png"
-        :path "notebooks/semantic.html"
+        :path "notebooks/semantic.clj"
         :description "A starter kit for interactively exploring WikiData's vast semantic database."}
        {:title "The double pendulum"
         :preview "https://cdn.nextjournal.com/data/Qmdhk9WEogAvH9cgehnpq3REkATa91JiWgYNUtoSW74Q9A?filename=CleanShot%202021-11-30%20at%2018.45.46@2x.png&content-type=image/png"
-        :path "notebooks/sicmutils.html"
+        :path "notebooks/sicmutils.clj"
         :description "Simulate and visualize physical systems from the REPL."}
        {:title "Rule 30"
         :preview "https://cdn.nextjournal.com/data/QmQCrqkdYtKfNm9CGbXhzY4cy6qG8xhpWaCRPF5m6biLgV?filename=CleanShot%202021-11-30%20at%2018.46.55@2x.png&content-type=image/png"
-        :path "notebooks/rule_30.html"
+        :path "notebooks/rule_30.clj"
         :description "Cellular automata meet moldable viewers. 👾"}])))
 ```

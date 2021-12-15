@@ -1,5 +1,5 @@
 {:paths ["dev"]
- :deps {io.github.nextjournal/clerk        {:git/sha "64ce88eb80609ab915b61fbabd46f7d9c8ac1375"}
+ :deps {io.github.nextjournal/clerk        {:git/sha "d111501576537c402dc8bf65eee30e2cd90d2666"}
 
         ;; input various external data formats
         com.github.seancorfield/next.jdbc  {:mvn/version "1.2.659"}
@@ -20,12 +20,11 @@
 
  :aliases
  {:nextjournal/clerk
-  ;; we might use a version of Clerk which is ahead of main for demo purposes
-  {:override-deps {io.github.nextjournal/clerk {:git/sha "37d3686f8f475a7aef1d34b147f043b31dfd50a7"}}
-   :extra-paths ["datasets"]
+  {:extra-paths ["datasets"]
    :exec-fn nextjournal.clerk/build-static-app!
    ;; notebooks to be built, accepts globs patterns
-   :exec-args {:bundle? false
+   :exec-args {:git/url "https://github.com/nextjournal/clerk-demo"
+               :bundle? false
                :paths ["index.md"
                        "notebooks/introduction.clj"
                        "notebooks/data_science.clj"
