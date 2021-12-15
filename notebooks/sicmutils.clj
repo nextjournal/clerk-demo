@@ -319,7 +319,6 @@
 (defn system-inspector [data]
   {:config {:bar {:binSpacing 1, :discreteBandSize 5, :continuousBandSize 5}},
    :datasets {:points data}
-   :background "floralwhite",
    :vconcat [{:hconcat [{:layer (mapv (partial deep-merge
                                                {:encoding {:y {:field "y", :type "quantitative"},
                                                            :color {:field :id, :type :nominal},
