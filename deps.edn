@@ -1,5 +1,6 @@
 {:paths ["dev"]
- :deps {io.github.nextjournal/clerk        {:git/sha "d111501576537c402dc8bf65eee30e2cd90d2666"}
+ :deps {io.github.nextjournal/clerk        {:git/sha "99ae6b2307322a0843a683ddfa39ecc6d8cd6f56"}
+        com.google.cloud/google-cloud-nio  {:mvn/version "0.123.10"}
 
         ;; input various external data formats
         com.github.seancorfield/next.jdbc  {:mvn/version "1.2.659"}
@@ -16,6 +17,7 @@
         ;; semantic web goodies and box/arrow graphs
         jackrusher/mundaneum               {:git/url "https://github.com/jackrusher/mundaneum/"
                                             :git/sha "84476918ee47b66a2d6128e1a90780e52fd2ae44"}
+        clojusc/wordnet                    {:mvn/version "1.2.0"}
         arrowic/arrowic                    {:mvn/version "0.1.1"}}
 
  :aliases
