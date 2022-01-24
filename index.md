@@ -34,7 +34,7 @@
         :path "notebooks/semantic.clj"
         :description "A starter kit for interactively exploring WikiData's vast semantic database."}
        {:title "Images"
-        :preview ""
+        :preview "https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/The_Sower.jpg/1510px-The_Sower.jpg"
         :path "notebooks/images.clj"
         :description "Some examples about dealing with images."}
        {:title "The double pendulum"
