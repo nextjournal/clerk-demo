@@ -35,13 +35,13 @@
 (ImageIO/read (URL. "https://etc.usf.edu/clipart/36600/36667/thermos_36667_sm.gif"))
 
 ;; If you find yourself using a library that returns images as a
-;; `ByteArray`, you can read it into a `BufferedImage` by wrapping it
-;; in a `java.io.ByteArrayInputStream` before passing it to
-;; `java.imageio.ImageIO/read`.
+;; `ByteArray`, you can read the image into a `BufferedImage` by
+;; wrapping it in a `java.io.ByteArrayInputStream` before passing it
+;; to `java.imageio.ImageIO/read`.
 
 ;; In this example, we'll load computer art pioneer Vera Molnár's 1974
 ;; work _(Des)Ordres_ into a byte array, then convert it to a
-;; `BufferedImage` for display.
+;; `BufferedImage` for display. 😍
 (def raw-image
   (Files/readAllBytes (Paths/get "" (into-array ["datasets/images/vera-molnar.jpg"]))))
 
@@ -49,13 +49,13 @@
   (ImageIO/read in))
 
 ;; In addition to being able to load and use images from many sources,
-;; one can also generate images from scratch using code.  Here is an
+;; one can also generate images from scratch with code.  Here is an
 ;; example mathematical butterfly: 🦋
 (let [width 800
       height 800
       scale 70
       img (BufferedImage. width height BufferedImage/TYPE_BYTE_BINARY)]
-  (doseq [t (range 50000)]
+  (doseq [t (range 30000)]
     (let [n (- (Math/pow Math/E (Math/cos t))
                (* 2 (Math/cos (* 4 t)))
                (Math/pow (Math/sin (/ t 12)) 5))
@@ -63,7 +63,7 @@
           y (* scale (Math/cos t) n)]
       (.setRGB img
                (+ (* 0.5 width) x)
-               (+ (* 0.45 height) y)
+               (+ (* 0.43 height) y)
                (.getRGB java.awt.Color/WHITE)))) ;
   img)
 
