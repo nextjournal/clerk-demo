@@ -27,6 +27,7 @@
                :paths ["index.md"
                        "notebooks/introduction.clj"
                        "notebooks/data_science.clj"
+                       "notebooks/images.clj"
                        "notebooks/semantic.clj"
                        "notebooks/sicmutils.clj"
                        "notebooks/rule_30.clj"]}}}}
