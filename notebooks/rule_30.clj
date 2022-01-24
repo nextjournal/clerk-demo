@@ -19,10 +19,10 @@
 ;; represent a value.
 
 (clerk/set-viewers!
- [{:pred number? :render-fn #(v/html [:div.inline-block {:style {:width 16 :height 16}
-                                                         :class (if (pos? %) "bg-black" "bg-white border-solid border-2 border-black")}])}
-  {:pred list? :render-fn #(v/html (into [:div.flex.flex-col] (v/inspect-children %2) %1))}
-  {:pred #(and (vector? %) (not (map-entry? %))) :render-fn #(v/html (into [:div.flex.inline-flex] (v/inspect-children %2) %1))}])
+ [{:pred number? :render-fn '#(v/html [:div.inline-block {:style {:width 16 :height 16}
+                                                          :class (if (pos? %) "bg-black" "bg-white border-solid border-2 border-black")}])}
+  {:pred list? :render-fn '#(v/html (into [:div.flex.flex-col] (v/inspect-children %2) %1))}
+  {:pred #(and (vector? %) (not (map-entry? %))) :render-fn '#(v/html (into [:div.flex.inline-flex] (v/inspect-children %2) %1))}])
 
 ;; Now let's test each one to make sure they look the way we want:
 

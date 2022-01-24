@@ -2,8 +2,6 @@
 ^{:nextjournal.clerk/visibility #{:hide-ns}}
 (ns introduction
   (:require [nextjournal.clerk :as clerk]
-            [nextjournal.clerk.viewer :as v]
-            [babashka.fs :as fs]
             [meta-csv.core :as csv])
   (:import (java.net.http HttpRequest HttpClient HttpResponse$BodyHandlers)
            (java.net URI)))
@@ -184,16 +182,16 @@
 ;; In addition to these defaults, you can also attach a custom viewer
 ;; to any form. Here we make our own little viewer to greet James
 ;; Clerk Maxwell:
-(clerk/with-viewer #(v/html [:div "Greetings to " [:strong %] "!"])
+(clerk/with-viewer '#(v/html [:div "Greetings to " [:strong %] "!"])
   "James Clerk Maxwell")
 
 ;; But we can do more interesting things, like using a predicate
 ;; function to match numbers and turn them into headings, or
 ;; converting string into paragraphs.
 (clerk/with-viewers [{:pred number?
-                      :render-fn #(v/html [(keyword (str "h" %)) (str "Heading " %)])}
+                      :render-fn '#(v/html [(keyword (str "h" %)) (str "Heading " %)])}
                      {:pred string?
-                      :render-fn #(v/html [:p %])}]
+                      :render-fn '#(v/html [:p %])}]
   [1 "To begin at the beginning:"
    2 "It is Spring, moonless night in the small town, starless and bible-black,"
    3 "the cobblestreets silent and the hunched,"
@@ -203,8 +201,8 @@
 ;; Or you could use black and white squares to render numbers:
 ^::clerk/no-cache
 (clerk/with-viewers [{:pred number?
-                      :render-fn #(v/html [:div.inline-block {:style {:width 16 :height 16}
-                                                              :class (if (pos? %) "bg-black" "bg-white border-solid border-2 border-black")}])}]
+                      :render-fn '#(v/html [:div.inline-block {:style {:width 16 :height 16}
+                                                               :class (if (pos? %) "bg-black" "bg-white border-solid border-2 border-black")}])}]
   (take 10 (repeatedly #(rand-int 2))))
 
 ;; Or build your own colour parser and then use it to generate swatches:
@@ -215,11 +213,11 @@
                   (str "(?i)"
                        "(#(?:[0-9a-f]{2}){2,4}|(#[0-9a-f]{3})|"
                        "(rgb|hsl)a?\\((-?\\d+%?[,\\s]+){2,3}\\s*[\\d\\.]+%?\\))")) %))
-    :render-fn #(v/html [:div.inline-block.rounded-sm.shadow
-                         {:style {:width 16
-                                  :height 16
-                                  :border "1px solid rgba(0,0,0,.2)"
-                                  :background-color %}}])}]
+    :render-fn '#(v/html [:div.inline-block.rounded-sm.shadow
+                          {:style {:width 16
+                                   :height 16
+                                   :border "1px solid rgba(0,0,0,.2)"
+                                   :background-color %}}])}]
   ["#571845"
    "rgb(144,12,62)"
    "rgba(199,0,57,1.0)"
@@ -246,8 +244,8 @@
 
 (clerk/set-viewers! [{:pred bytes?
                       :fetch-fn (fn [_ bytes] {:nextjournal/content-type "image/png"
-                                              :nextjournal/value bytes})
-                      :render-fn (fn [blob] (v/html [:img {:src (v/url-for blob)}]))}])
+                                               :nextjournal/value bytes})
+                      :render-fn '(fn [blob] (v/html [:img {:src (v/url-for blob)}]))}])
 
 (.. (HttpClient/newHttpClient)
     (send (.build (HttpRequest/newBuilder (URI. "https://upload.wikimedia.org/wikipedia/commons/5/57/James_Clerk_Maxwell.png")))

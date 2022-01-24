@@ -17,14 +17,14 @@
       g1 (assoc (vec (repeat n 0)) (/ (dec n) 2) 1)
       evolve #(mapv rule30 (partition 3 1 (repeat 0) (cons 0 %)))]
   (clerk/with-viewer
-    (fn [board]
-      (let [cell (fn [c] (vector :div.inline-block
-                                 {:class (if (zero? c)
-                                           "bg-white border-solid border-2 border-black"
-                                           "bg-black")
-                                  :style {:width 16 :height 16}}))
-            row (fn [r] (into [:div.flex.inline-flex] (map cell) r))]
-        (v/html (into [:div.flex.flex-col] (map row) board))))
+    '(fn [board]
+       (let [cell (fn [c] (vector :div.inline-block
+                                  {:class (if (zero? c)
+                                            "bg-white border-solid border-2 border-black"
+                                            "bg-black")
+                                   :style {:width 16 :height 16}}))
+             row (fn [r] (into [:div.flex.inline-flex] (map cell) r))]
+         (v/html (into [:div.flex.flex-col] (map row) board))))
     (->> g1 (iterate evolve) (take 17))))
 
 ;; Clerk uses static analysis and a tiny bit of data flow to avoid needless recomputation.
