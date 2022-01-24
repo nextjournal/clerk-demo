@@ -33,6 +33,10 @@
         :preview "https://cdn.nextjournal.com/data/QmYH2gBYSifEgNJDjGUjVAAaHWt5c4WD6Ko7Be7Be5f4hy?filename=CleanShot%202021-11-30%20at%2018.26.23@2x.png&content-type=image/png"
         :path "notebooks/semantic.clj"
         :description "A starter kit for interactively exploring WikiData's vast semantic database."}
+       {:title "Images"
+        :preview ""
+        :path "notebooks/images.clj"
+        :description "Some examples about dealing with images."}
        {:title "The double pendulum"
         :preview "https://cdn.nextjournal.com/data/Qmdhk9WEogAvH9cgehnpq3REkATa91JiWgYNUtoSW74Q9A?filename=CleanShot%202021-11-30%20at%2018.45.46@2x.png&content-type=image/png"
         :path "notebooks/sicmutils.clj"
