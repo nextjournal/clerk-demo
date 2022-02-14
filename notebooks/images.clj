@@ -64,7 +64,7 @@
       (.setRGB img
                (+ (* 0.5 width) x)
                (+ (* 0.43 height) y)
-               (.getRGB java.awt.Color/WHITE)))) ;
+               (.getRGB java.awt.Color/WHITE))))
   img)
 
 ;; ... which should finally let us implement this legendary emacs
