@@ -1,6 +1,7 @@
 {:paths ["dev" "notebooks"]
- :deps {io.github.nextjournal/clerk        {:git/sha "b0e13859af5280e4d75ba9cb324cbf8010e555cd"}
-        #_{:local/root "../clerk"} #_ {:mvn/version "0.5.346"}
+ :deps {io.github.nextjournal/clerk {:git/sha "549f9956870c69ef0951ca82d55a8e5ec2e49ed4"}
+        #_ {:local/root "../clerk"}
+        #_ {:mvn/version "0.5.346"}
 
         ;; input various external data formats
         com.github.seancorfield/next.jdbc  {:mvn/version "1.2.659"}
@@ -8,6 +9,7 @@
         org.xerial/sqlite-jdbc             {:mvn/version "3.34.0"}
         dk.ative/docjure                   {:mvn/version "1.16.0"}
         clojusc/wordnet                    {:mvn/version "1.2.0"}
+        clj-jgit/clj-jgit                  {:mvn/version "1.0.2"}
 
         ;; some statistical routines
         kixi/stats {:mvn/version "0.5.4"}
