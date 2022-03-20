@@ -12,8 +12,8 @@
         ;; some statistical routines
         kixi/stats {:mvn/version "0.5.4"}
 
-        ;; SICM utils numerical and physics routines
-        sicmutils/sicmutils {:mvn/version "0.20.1"}
+        ;; SICMUtils numerical and physics routines
+        sicmutils/sicmutils {:mvn/version "0.22.0"}
 
         ;; semantic web goodies and box/arrow graphs
         jackrusher/mundaneum               {:git/url "https://github.com/jackrusher/mundaneum/"
