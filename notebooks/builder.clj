@@ -16,22 +16,21 @@
 (defn badge [{:keys [block-counts file progress state]}]
   (let [done? (= state :done)]
     [:div.p-1
-     [:div.rounded-md.border.border-slate-300.px-4.py-2.font-sans.shadow
+     [:div.rounded-md.border.border-slate-300.px-4.py-3.font-sans.shadow
       {:class (if done? "bg-green-100" "bg-slate-100")}
-      [:div.flex.justify-between
-       [:div.flex
+      [:div.flex.justify-between.items-center
+       [:div.flex.items-center
         (if done?
           [:svg.w-4.h-4.text-green-600
-           {:class "mt-[2px] mr-[7px] -ml-[2px]" :xmlns "http://www.w3.org/2000/svg" :viewBox "0 0 20 20" :fill "currentColor"}
+           {:class "mr-[7px] -ml-[2px]" :xmlns "http://www.w3.org/2000/svg" :viewBox "0 0 20 20" :fill "currentColor"}
            [:path {:fill-rule "evenodd" :d "M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" :clip-rule "evenodd"}]]
           [:div.rounded-full.h-3.w-3.mr-2.border.border-slate-400.shadow-inner
-           {:class (str "mt-[3px] "
-                        (case state
-                          :parsed "bg-orange-300"
-                          :executing "bg-green-300"
-                          "bg-slate-300"))}])
+           {:class (case state
+                     :parsed "bg-orange-300"
+                     :executing "bg-green-300"
+                     "bg-slate-300")}])
         [:div
-         [:div.text-sm.font-medium
+         [:div.text-sm.font-medium.leading-none
           file
           (when (seq block-counts)
             [:span.text-slate-600.ml-2.font-normal
@@ -39,7 +38,7 @@
              (str "(" (str/join ", " (map (fn [[type count]] (str count " " (name type) " blocks")) block-counts)) ")")])]]]
        (when progress
          [:div.rounded-full.h-2.bg-white.border.border-slate-400.overflow-hidden.shadow-inner
-          {:class "w-[100px] mt-[5px]"}
+          {:class "w-[100px]"}
           [:div.h-full.bg-green-300
            {:style {:width (str (* 100 progress) "%")}}]])]]]))
 
