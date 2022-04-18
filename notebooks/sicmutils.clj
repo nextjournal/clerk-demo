@@ -7,11 +7,13 @@
 ;; the [SICMUtils](https://github.com/sicmutils/sicmutils) Clojure library and
 ;; the Clerk rendering environment.
 
+#_{:clj-kondo/ignore [:refer-all]}
 (ns sicmutils
   (:refer-clojure
    :exclude [+ - * / partial ref zero? numerator denominator compare = run!])
   (:require [nextjournal.clerk :as clerk]
-            [sicmutils.env :as e :refer :all]))
+            [sicmutils.env :as e :refer :all]
+            [sicmutils.expression.render :as xr]))
 
 ;; ## Lagrangian
 ;;
@@ -20,22 +22,22 @@
 ;; Lagrangian with the familiar form of `T - V`.
 
 (defn angles->rect [l1 l2]
-  (fn [[t [theta1 theta2]]]
+  (fn [[_ [theta1 theta2]]]
     (let [x1 (* l1 (sin theta1))
-            y1 (- (* l1 (cos theta1)))
+          y1 (- (* l1 (cos theta1)))
           x2 (+ x1 (* l2 (sin (+ theta1 theta2))))
-            y2 (- y1 (* l2 (cos (+ theta1 theta2))))]
-        (up x1 y1 x2 y2))))
+          y2 (- y1 (* l2 (cos (+ theta1 theta2))))]
+      (up x1 y1 x2 y2))))
 
 ;; `T` describes the sum of the kinetic energy of two particles in rectangular
 ;; coordinates.
 
 (defn T [m1 m2]
   (fn [[_ _ [xdot1 ydot1 xdot2 ydot2]]]
-    (+ (* (/ 1 2) m1 (+ (square xdot1)
-                        (square ydot1)))
-         (* (/ 1 2) m2 (+ (square xdot2)
-                        (square ydot2))))))
+    (+ (* 1/2 m1 (+ (square xdot1)
+                    (square ydot1)))
+       (* 1/2 m2 (+ (square xdot2)
+                    (square ydot2))))))
 
 
 ;; `V` describes a uniform gravitational potential with coefficient `g`, acting
@@ -85,7 +87,7 @@
 ;; And here are the equations of motion for the system:
 
 (let [L (L-double-pendulum 'm_1 'm_2 'l_1 'l_2 'g)]
-  (binding [sicmutils.expression.render/*TeX-vertical-down-tuples* true]
+  (binding [xr/*TeX-vertical-down-tuples* true]
     (render-eq
      (((Lagrange-equations L)
        (up (literal-function 'theta_1)
@@ -95,7 +97,6 @@
 ;; What do these mean?
 ;;
 ;; - the system has two degrees of freedom: $\theta_1$ and $\theta_2$.
-
 ;; - at any point `t` in time, the two equations above, full of first and second
 ;; - order derivatives of the position functions, will stay true
 ;; - the system can use these equations to simulate the system, one tick at a time.
@@ -162,7 +163,7 @@
       horizon
       {:compile? true
        :epsilon 1.0e-13
-       :observe (fn [t state]
+       :observe (fn [_ state]
                   (swap!
                    collector conj! state))})
      (persistent! @collector))))
@@ -221,6 +222,7 @@
 
 ;; Here is `transform-data`:
 
+#_{:clj-kondo/ignore [:unresolved-symbol]}
 (defn transform-data [xs]
   (let [energy-fn (L-energy m1 m2 l1 l2 g)
         monitor   (energy-monitor energy-fn (first xs))
@@ -453,12 +455,12 @@
 
 (defn divergence-monitor []
   (let [pv (principal-value Math/PI)]
-    (fn [[t [thetas1 thetas2]]]
+    (fn [[_ [thetas1 thetas2]]]
       (safe-log
        (Math/abs
         (pv
-                 (- (nth thetas1 1)
-                    (nth thetas2 1))))))))
+         (- (nth thetas1 1)
+            (nth thetas2 1))))))))
 
 (defn run-double-double!
   "Two different initializations, slightly kicked"
@@ -466,8 +468,8 @@
   (let [initial-q2    (+ initial-q1 (up 0.0 1e-10))
         initial-qdot  (up 0.0 0.0)
         initial-state (up 0.0
-                              (up initial-q1 initial-q2)
-                              (up initial-qdot initial-qdot))
+                          (up initial-q1 initial-q2)
+                          (up initial-qdot initial-qdot))
         collector     (atom (transient []))]
     ((evolve dd-state-derivative m1 m2 l1 l2 g)
      initial-state
@@ -475,7 +477,7 @@
      horizon
      {:compile? true
       :epsilon 1.0e-13 ; = (max-norm 1.e-13)
-      :observe (fn [t state]
+      :observe (fn [_ state]
                  (swap! collector conj! state))})
     (persistent! @collector)))
 
