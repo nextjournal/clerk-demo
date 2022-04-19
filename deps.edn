@@ -1,5 +1,5 @@
 {:paths ["dev" "notebooks"]
- :deps {io.github.nextjournal/clerk {:mvn/version "0.6.387"}
+ :deps {io.github.nextjournal/clerk {:mvn/version "0.7.416"}
 
         ;; input various external data formats
         com.github.seancorfield/next.jdbc  {:mvn/version "1.2.659"}
@@ -12,8 +12,8 @@
         ;; some statistical routines
         kixi/stats {:mvn/version "0.5.4"}
 
-        ;; SICM utils numerical and physics routines
-        sicmutils/sicmutils {:mvn/version "0.20.1"}
+        ;; SICMUtils numerical and physics routines
+        sicmutils/sicmutils {:mvn/version "0.22.0"}
 
         ;; semantic web goodies and box/arrow graphs
         jackrusher/mundaneum               {:git/url "https://github.com/jackrusher/mundaneum/"

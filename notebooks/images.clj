@@ -12,7 +12,7 @@
 ;; `java.awt.image.BufferedImage` class, which is the native image
 ;; format of the JVM.
 
-;; When combined with `java.imageio.ImageIO/read`, one can easily load
+;; When combined with `javax.imageio.ImageIO/read`, one can easily load
 ;; images in a variety of formats from a `java.io.File`, an
 ;; `java.io.InputStream`, or any resource that a `java.net.URL` can
 ;; address.
