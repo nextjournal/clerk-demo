@@ -17,7 +17,7 @@
 
         ;; semantic web goodies and box/arrow graphs
         jackrusher/mundaneum               {:git/url "https://github.com/jackrusher/mundaneum/"
-                                            :git/sha "84476918ee47b66a2d6128e1a90780e52fd2ae44"}
+                                            :git/sha "d2c934a12388d88ddb3e53fef92ec2eef97d6140"}
         arrowic/arrowic                    {:mvn/version "0.1.1"}
 
         ;; 2D drawing routines
