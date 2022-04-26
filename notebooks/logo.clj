@@ -39,25 +39,24 @@
       (c2d/set-background 255 255 255)
       (c2d/set-color 66 66 66)
       (c2d/set-stroke 4)
-      (c2d/path hilbert-points))
-  ;; just the underlying BufferedImage, please
-  (c2d/to-image canvas))
+      (c2d/path hilbert-points)
+      c2d/to-image)) 
 
 ;; The trick to getting the effect we want is to apply a conformal
 ;; mapping to the original Hilbert Curve to convert it into an 👁 shape
 ;; in celebration of Clerk's viewers. We can do this by treating the
-;; original point coordinates as complex numbers,
-;; squaring them, then taking the real and imaginary portions of each
-;; of those complex numbers as the _x_ and _y_ coordinates of a new
-;; set of points. This is made especially easy because Clojure2D
-;; happens to include the author's
-;; [Fastmath](https://github.com/generateme/fastmath) library.
+;; original point coordinates as complex numbers, squaring them, then
+;; taking the real and imaginary portions of each of those complex
+;; numbers as the _x_ and _y_ coordinates of a new set of points. This
+;; is made especially easy because Clojure2D happens to include the
+;; author's [Fastmath](https://github.com/generateme/fastmath)
+;; library. 🎉
 
 (c2d/with-canvas [canvas (c2d/canvas 1000 600 :highest)]
   (-> canvas
-      (c2d/set-background 33.0 5.0 24.0)
-      (c2d/translate 500 300)    ; origin to center
-      (c2d/rotate (/ Math/PI 2)) ; rotate canvas around origin
+      (c2d/set-background 33.0 5.0 24.0) ; RGB deep purple
+      (c2d/translate 500 300)            ; origin to center
+      (c2d/rotate (/ Math/PI 2))         ; rotate the canvas, ⬯ → ⬭
       ;; colour and stroke width
       (c2d/set-color 147.0 189.0 154.0)
       (c2d/set-stroke 4)
@@ -65,20 +64,17 @@
       (c2d/ellipse 0 0 22 22)
       (c2d/ellipse 0 -10 20 20)
       (c2d/ellipse 0 10 20 20)
-      ;; create a path from complex square of hilbert curve points
-      (c2d/path (map (fn [p]
-                       ;; center the curve
-                       (-> (v/sub p (v/vec2 400 400))
-                           ;; square it (as complex numbers!)
-                           (complex/sq)
-                           ;; scale the squared values down
-                           (v/mult 0.0015))) hilbert-points)))
-  (c2d/to-image canvas))
+      ;; draw a path using the complex square of our hilbert curve points
+      (c2d/path (map #(-> (v/sub % (v/vec2 400 400)) ; -[½w ½h] from vectors to center the curve
+                          complex/sq                 ; square each vector as a complex number
+                          (v/mult 0.0015))           ; scale those squared vectors down          
+                     hilbert-points))
+      c2d/to-image))
 
 ;; What I find so special and enchanting about the $$w = z^{2}$$
 ;; mapping that we're using here is that it maintains the angle of
 ;; intersection everywhere but $$z = 0$$ (the origin). 📐
 
-;; It's called a conformal map by mathematicians. 😍
+;; This is called a _conformal map_ by mathematicians. 😍
 
 #_(clerk/show! "notebooks/logo.clj")
