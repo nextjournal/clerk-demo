@@ -34,13 +34,12 @@
 ;; But they're much more interesting if we use
 ;; [Clojure2D](https://github.com/Clojure2D/clojure2d) canvas to draw
 ;; a path made from points to show the complete curve:
-(c2d/with-canvas [canvas (c2d/canvas 800 800 :highest)]
-  (-> canvas
-      (c2d/set-background 255 255 255)
-      (c2d/set-color 66 66 66)
-      (c2d/set-stroke 4)
-      (c2d/path hilbert-points)
-      c2d/to-image)) 
+(c2d/with-canvas-> (c2d/canvas 800 800 :highest)
+  (c2d/set-background 255 255 255)
+  (c2d/set-color 66 66 66)
+  (c2d/set-stroke 4)
+  (c2d/path hilbert-points)
+  c2d/to-image) 
 
 ;; The trick to getting the effect we want is to apply a conformal
 ;; mapping to the original Hilbert Curve to convert it into an 👁 shape
@@ -52,24 +51,23 @@
 ;; author's [Fastmath](https://github.com/generateme/fastmath)
 ;; library. 🎉
 
-(c2d/with-canvas [canvas (c2d/canvas 1000 600 :highest)]
-  (-> canvas
-      (c2d/set-background 33.0 5.0 24.0) ; RGB deep purple
-      (c2d/translate 500 300)            ; origin to center
-      (c2d/rotate (/ Math/PI 2))         ; rotate the canvas, ⬯ → ⬭
-      ;; colour and stroke width
-      (c2d/set-color 147.0 189.0 154.0)
-      (c2d/set-stroke 4)
-      ;; ellipses to fill in the center of the "eye"
-      (c2d/ellipse 0 0 22 22)
-      (c2d/ellipse 0 -10 20 20)
-      (c2d/ellipse 0 10 20 20)
-      ;; draw a path using the complex square of our hilbert curve points
-      (c2d/path (map #(-> (v/sub % (v/vec2 400 400)) ; -[½w ½h] from vectors to center the curve
-                          complex/sq                 ; square each vector as a complex number
-                          (v/mult 0.0015))           ; scale those squared vectors down          
-                     hilbert-points))
-      c2d/to-image))
+(c2d/with-canvas-> (c2d/canvas 1000 600 :highest)
+  (c2d/set-background 33.0 5.0 24.0) ; RGB deep purple
+  (c2d/translate 500 300)            ; origin to center
+  (c2d/rotate (/ Math/PI 2))         ; rotate the canvas, ⬯ → ⬭
+  ;; colour and stroke width
+  (c2d/set-color 147.0 189.0 154.0)
+  (c2d/set-stroke 4)
+  ;; ellipses to fill in the center of the "eye"
+  (c2d/ellipse 0 0 22 22)
+  (c2d/ellipse 0 -10 20 20)
+  (c2d/ellipse 0 10 20 20)
+  ;; draw a path using the complex square of our hilbert curve points
+  (c2d/path (map #(-> (v/sub % (v/vec2 400 400)) ; -[½w ½h] from vectors to center the curve
+                      complex/sq                 ; square each vector as a complex number
+                      (v/mult 0.0015))           ; scale those squared vectors down          
+                 hilbert-points))
+  c2d/to-image)
 
 ;; What I find so special and enchanting about the $$w = z^{2}$$
 ;; mapping that we're using here is that it maintains the angle of
