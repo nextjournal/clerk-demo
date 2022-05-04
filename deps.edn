@@ -1,4 +1,4 @@
-{:paths ["dev" "notebooks"]
+{:paths ["dev" "notebooks" "resources"]
  :deps {io.github.nextjournal/clerk {:mvn/version "0.7.418"}
 
         ;; input various external data formats
@@ -21,7 +21,10 @@
         arrowic/arrowic                    {:mvn/version "0.1.1"}
 
         ;; 2D drawing routines
-        clojure2d/clojure2d                {:mvn/version "1.4.4"}}
+        clojure2d/clojure2d                {:mvn/version "1.4.4"}
+
+        ;; OSC server
+        com.illposed.osc/javaosc-core      {:mvn/version "0.8"}}
 
  :aliases
  {:nextjournal/clerk
