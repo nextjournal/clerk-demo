@@ -1,6 +1,8 @@
 <!DOCTYPE html>
-<html><head><title>🎪 Clerk Demo on GitHub</title><meta charset="UTF-8"><meta content="width=device-width, initial-scale=1" name="viewport"><script src="https://cdn.tailwindcss.com?plugins=typography" type="text/javascript"></script><script>tailwind.config = {
+<html class="overflow-hidden min-h-screen"><head><title>🎪 Clerk Demo on GitHub</title><meta charset="UTF-8"><meta content="width=device-width, initial-scale=1" name="viewport"><script src="https://cdn.tailwindcss.com?plugins=typography" type="text/javascript"></script><script>tailwind.config = {
+  darkMode: "class",
   content: ["./public/build/index.html", "./public/build/**/*.html", "./build/viewer.js"],
+  safelist: ['dark'],
   theme: {
     extend: {},
     fontFamily: {
@@ -33,7 +35,7 @@
     @apply font-serif antialiased text-gray-900 sm:overscroll-y-none;
   }
   code, .code {
-    @apply font-mono text-sm text-gray-900 bg-slate-50 px-0.5 py-px rounded;
+    @apply font-mono text-sm text-gray-900 bg-slate-50 px-0.5 py-px rounded dark:bg-gray-800;
   }
   code::before, code::after { @apply content-none !important; }
   h1, h2, h3, h4, h5, h6 {
@@ -42,9 +44,6 @@
   h1 { @apply text-4xl; }
   h2 { @apply text-3xl; }
   h3 { @apply text-2xl; }
-  h4 { @apply text-xl; }
-  h5 { @apply text-lg; }
-  h6 { @apply text-base; }
 
   button { @apply focus:outline-none; }
   strong { @apply font-bold; }
@@ -99,6 +98,10 @@
 .disclose:hover {
   border-color: var(--near-black-color) transparent;
 }
+.dark .disclose,
+.dark .disclose:hover {
+  border-color: white transparent;
+}
 .disclose.collapsed {
   @apply rotate-[-90deg];
 }
@@ -108,13 +111,6 @@
 
 .page {
   @apply max-w-5xl mx-auto px-12 box-border flex-shrink-0;
-}
-.toc-content {
-  @apply translate-x-[-110%] opacity-0;
-}
-.toc:hover .toc-content,
-.toc.pinned .toc-content {
-  @apply translate-x-0 opacity-100;
 }
 .max-w-prose { @apply max-w-[46rem] !important; }
 .max-w-wide  { @apply max-w-3xl !important; }
@@ -127,48 +123,81 @@
   @apply mt-1;
 }
 
+/* compact TOC */
+.viewer-markdown .toc ul {
+  list-style: none;
+  @apply my-0;
+}
+
 /* Code Viewer */
 /* --------------------------------------------------------------- */
 
 .viewer-code {
-  @apply font-mono bg-slate-100 rounded-sm py-4 px-8 text-sm mt-4 overflow-x-auto;
+  @apply font-mono bg-slate-100 rounded-sm text-sm mt-4 overflow-x-auto dark:bg-gray-800;
+}
+.viewer-code .cm-content {
+  @apply py-4 px-8;
 }
 @media (min-width: 960px){
-  .viewer-notebook .viewer-code {
+  .viewer-notebook .viewer-code .cm-content {
     @apply py-4 pl-12;
   }
 }
 /* Don’t show focus outline when double-clicking cell in Safari */
 .cm-scroller { @apply focus:outline-none; }
 
-/* Data Viewer */
+/* Syntax Highlighting */
 /* --------------------------------------------------------------- */
 
-.inspected-value { @apply text-xs font-mono; }
+.inspected-value { @apply text-xs font-mono leading-[1.25rem]; }
+.cmt-strong, .cmt-heading { @apply font-bold; }
+.cmt-emphasis { @apply italic; }
+.cmt-strikethrough { @apply line-through; }
+.cmt-link { @apply underline; }
+.untyped-value { @apply whitespace-nowrap; }
 
-.syntax-tag, .cm-number, .syntax-number, .cm-string, .syntax-string,
-.cm-atom, .syntax-keyword, .cm-builtin, .cm-keyword, .syntax-symbol,
-.syntax-bool, .syntax-nil, .syntax-untyped, .syntax-key, .syntax-index {
-  @apply font-mono;
+.cm-editor, .cmt-default, .viewer-result {
+  @apply text-slate-800 dark:text-slate-300;
 }
-
-.syntax-tag     { @apply text-pink-900 !important; }
-.cm-number      { @apply text-sky-900 !important; }
-.syntax-number  { @apply text-sky-900 !important; }
-.cm-string      { @apply text-teal-700 !important; }
-.syntax-string  { @apply text-teal-700 !important; }
-.cm-atom        { @apply text-sky-900 !important; }
-.syntax-keyword { @apply text-sky-900 !important; }
-.cm-builtin     { @apply text-pink-900 !important; }
-.cm-keyword     { @apply text-pink-900 !important; }
-.syntax-symbol  { @apply text-pink-900 !important; }
-.syntax-bool    { @apply text-sky-900 !important; }
-.syntax-nil     { @apply text-sky-900 !important; }
-.syntax-untyped { @apply text-rose-500 !important; }
-.syntax-key     { @apply text-fuchsia-900 !important; }
-.syntax-index   { @apply text-fuchsia-900 !important; }
-
-.syntax-untyped { @apply whitespace-nowrap; }
+.cmt-keyword {
+  @apply text-purple-800 dark:text-pink-400;
+}
+.cmt-atom, .cmt-bool, .cmt-url, .cmt-contentSeparator, .cmt-labelName {
+  @apply text-blue-900 dark:text-blue-300;
+}
+.cmt-inserted, .cmt-literal {
+  @apply text-emerald-700 dark:text-emerald-200;
+}
+.cmt-string, .cmt-deleted {
+  @apply text-rose-700 dark:text-sky-300;
+}
+.cmt-regexp, .cmt-escape {
+  @apply text-orange-500 dark:text-orange-300;
+}
+.cmt-variableName {
+  @apply text-blue-800 dark:text-sky-300;
+}
+.cmt-typeName, .cmt-namespace {
+  @apply text-emerald-600 dark:text-emerald-300;
+}
+.cmt-className {
+  @apply text-teal-600 dark:text-teal-200;
+}
+.cmt-macroName {
+  @apply text-teal-700 dark:text-teal-200;
+}
+.cmt-propertyName {
+  @apply text-blue-700 dark:text-blue-200;
+}
+.cmt-comment {
+  @apply text-slate-500 dark:text-slate-400;
+}
+.cmt-meta {
+  @apply text-slate-600 dark:text-slate-400;
+}
+.cmt-invalid {
+  @apply text-red-500 dark:text-red-300;
+}
 
 .result-data {
   @apply font-mono text-sm overflow-x-auto whitespace-nowrap leading-normal;
@@ -201,7 +230,9 @@
 .viewer-notebook,
 .viewer-markdown {
   @apply prose
-    prose-a:text-indigo-600 prose-a:font-medium prose-a:no-underline hover:prose-a:underline
+    dark:prose-invert
+    prose-a:text-blue-600 prose-a:no-underline hover:prose-a:underline
+    dark:prose-a:text-blue-300
     prose-p:mt-4 prose-p:leading-snug
     prose-ol:mt-4 prose-ol:mb-6 prose-ol:leading-snug
     prose-ul:mt-4 prose-ul:mb-6 prose-ul:leading-snug
@@ -212,10 +243,15 @@
     prose-headings:mb-6
     prose-th:mb-0
     prose-img:mb-0
+    prose-code:font-medium prose-code:bg-slate-100
     max-w-none;
 }
 .viewer-markdown li > p {
   @apply inline;
+}
+.viewer-markdown blockquote p:first-of-type:before,
+.viewer-markdown blockquote p:last-of-type:after {
+  @apply content-none;
 }
 
 /* Todo Lists */
@@ -259,6 +295,7 @@
 /* --------------------------------------------------------------- */
 
 .viewer-notebook { @apply py-16; }
+#clerk-static-app .viewer-notebook { @apply pt-[0.8rem] pb-16; }
 .viewer-markdown *:first-child:not(.viewer-code) { @apply mt-0; }
 .viewer + .viewer { @apply mt-6; }
 .viewer-markdown + .viewer { @apply mt-3; }
@@ -293,6 +330,9 @@
 .viewer-result + .viewer-result {
   @apply mt-2;
 }
+.viewer-result {
+  @apply leading-tight;
+}
 @media (min-width: 768px) {
   .devcard-desc > div {
     @apply max-w-full m-0;
@@ -313,12 +353,6 @@
 /* Devdocs */
 /* --------------------------------------------------------------- */
 
-.collapsed-sidebar:not(.mobile-sidebar) .sidebar-content {
-  @apply transition-all duration-200 ml-[-360px] opacity-0;
-}
-.collapsed-sidebar:hover:not(.mobile-sidebar) .sidebar-content {
-  @apply ml-0 opacity-100;
-}
 .logo, .logo-white {
   @apply block indent-[-999em];
   background: url(/images/nextjournal-logo.svg) center center no-repeat;
@@ -334,8 +368,8 @@
 .vega-embed .chart-wrapper { @apply h-auto !important; }
 /* fixes fraction separators being overridden by tw’s border-color */
 .katex * { @apply border-black; }
-</style><script src="https://storage.googleapis.com/nextjournal-cas-eu/data/8VtrAyT1tkNwAPZyFu4amwY7s9rMteumpHLJUHWj4hhaAn7NxQnM1u9C5r9p37ZaEJ656h6Dh7NxGgHU6ztkNqEsnQ" type="text/javascript"></script><link href="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.css" rel="stylesheet" type="text/css"><link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&amp;family=Fira+Mono:wght@400;700&amp;family=Fira+Sans+Condensed:ital,wght@0,700;1,700&amp;family=Fira+Sans:ital,wght@0,400;0,500;0,700;1,400;1,500;1,700&amp;family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&amp;display=swap" rel="stylesheet" type="text/css"></head><body><div id="clerk-static-app"></div><script>let viewer = nextjournal.clerk.sci_viewer
+</style><script src="https://storage.googleapis.com/nextjournal-cas-eu/data/31Q49UX1s52zHwAywrL1GGmU5EJxiSDEBiMdyP4woVoBvXHTAfxSAyiYSyiQVsUVdgcaXHrowdSU13NypEpDfvKv" type="text/javascript"></script><link href="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.css" rel="stylesheet" type="text/css"><link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&amp;family=Fira+Mono:wght@400;700&amp;family=Fira+Sans+Condensed:ital,wght@0,700;1,700&amp;family=Fira+Sans:ital,wght@0,400;0,500;0,700;1,400;1,500;1,700&amp;family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&amp;display=swap" rel="stylesheet" type="text/css"></head><body><div id="clerk-static-app"></div><script>let viewer = nextjournal.clerk.sci_viewer
 let app = nextjournal.clerk.static_app
-let opts = viewer.read_string("{:bundle? false, :paths [\"index.md\" \"notebooks/introduction.clj\" \"notebooks/data_science.clj\" \"notebooks/images.clj\" \"notebooks/semantic.clj\" \"notebooks/sicmutils.clj\" \"notebooks/rule_30.clj\"], :path-prefix \"clerk-demo/\", :git/sha \"bd74d652a8dddbdddb42b62fe8043cf1f4b4e65d\", :path->doc {\"index.md\" {:nextjournal/value {:blocks [{:nextjournal/value {:type :doc, :content [{:type :heading, :content [{:type :text, :text \"🎪 Clerk Demo \"} {:type :link, :content [{:type :text, :text \"on GitHub\"}], :attrs {:href \"https://github.com/nextjournal/clerk-demo\"}}], :heading-level 1}]}, :nextjournal/viewer :markdown} {:nextjournal/viewer :clerk/result, :nextjournal/value {:nextjournal/edn \"{:path [], :nextjournal/value [:div.md:grid.md:gap-8.md:grid-cols-2.pb-8 [:a.rounded-lg.shadow-lg.border.border-gray-300.relative.flex.flex-col.hover:border-indigo-600.group.mb-8.md:mb-0 {:href #viewer-eval (v/doc-url \\\"notebooks/introduction.clj\\\"), :style {:height 300}} [:div.flex-auto.overflow-hidden.rounded-t-md.flex.items-center.px-3.py-4 [:img {:src \\\"https://cdn.nextjournal.com/data/Qmb7qfVDvgcfeEQrfcPwD1DFipw8TuyW8Rno33NAJSYDjr?filename=introduction.png&content-type=image/png\\\", :width \\\"100%\\\", :style {:object-fit \\\"contain\\\"}}]] [:div.sans-serif.border-t.border-gray-300.px-4.py-2.group-hover:border-indigo-600 [:div.font-bold.block.group-hover:text-indigo-600 \\\"Introduction\\\"] [:div.text-xs.text-gray-500.group-hover:text-indigo-600.leading-normal \\\"A first look at Clerk, including many small usage examples.\\\"]]] [:a.rounded-lg.shadow-lg.border.border-gray-300.relative.flex.flex-col.hover:border-indigo-600.group.mb-8.md:mb-0 {:href #viewer-eval (v/doc-url \\\"notebooks/data_science.clj\\\"), :style {:height 300}} [:div.flex-auto.overflow-hidden.rounded-t-md.flex.items-center.px-3.py-4 [:img {:src \\\"https://cdn.nextjournal.com/data/QmcznoqioDQUKbH777pacrT4LDTwqmP1nmw7bfQ7uXrZQh?filename=CleanShot%202021-11-30%20at%2018.19.07@2x.png&content-type=image/png\\\", :width \\\"100%\\\", :style {:object-fit \\\"contain\\\"}}]] [:div.sans-serif.border-t.border-gray-300.px-4.py-2.group-hover:border-indigo-600 [:div.font-bold.block.group-hover:text-indigo-600 \\\"Data Science\\\"] [:div.text-xs.text-gray-500.group-hover:text-indigo-600.leading-normal \\\"An exploration of open data using Clerk.\\\"]]] [:a.rounded-lg.shadow-lg.border.border-gray-300.relative.flex.flex-col.hover:border-indigo-600.group.mb-8.md:mb-0 {:href #viewer-eval (v/doc-url \\\"notebooks/semantic.clj\\\"), :style {:height 300}} [:div.flex-auto.overflow-hidden.rounded-t-md.flex.items-center.px-3.py-4 [:img {:src \\\"https://cdn.nextjournal.com/data/QmYH2gBYSifEgNJDjGUjVAAaHWt5c4WD6Ko7Be7Be5f4hy?filename=CleanShot%202021-11-30%20at%2018.26.23@2x.png&content-type=image/png\\\", :width \\\"100%\\\", :style {:object-fit \\\"contain\\\"}}]] [:div.sans-serif.border-t.border-gray-300.px-4.py-2.group-hover:border-indigo-600 [:div.font-bold.block.group-hover:text-indigo-600 \\\"Semantic Queries\\\"] [:div.text-xs.text-gray-500.group-hover:text-indigo-600.leading-normal \\\"A starter kit for interactively exploring WikiData's vast semantic database.\\\"]]] [:a.rounded-lg.shadow-lg.border.border-gray-300.relative.flex.flex-col.hover:border-indigo-600.group.mb-8.md:mb-0 {:href #viewer-eval (v/doc-url \\\"notebooks/images.clj\\\"), :style {:height 300}} [:div.flex-auto.overflow-hidden.rounded-t-md.flex.items-center.px-3.py-4 [:img {:src \\\"https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/The_Sower.jpg/1510px-The_Sower.jpg\\\", :width \\\"100%\\\", :style {:object-fit \\\"contain\\\"}}]] [:div.sans-serif.border-t.border-gray-300.px-4.py-2.group-hover:border-indigo-600 [:div.font-bold.block.group-hover:text-indigo-600 \\\"Images\\\"] [:div.text-xs.text-gray-500.group-hover:text-indigo-600.leading-normal \\\"Some examples about dealing with images.\\\"]]] [:a.rounded-lg.shadow-lg.border.border-gray-300.relative.flex.flex-col.hover:border-indigo-600.group.mb-8.md:mb-0 {:href #viewer-eval (v/doc-url \\\"notebooks/sicmutils.clj\\\"), :style {:height 300}} [:div.flex-auto.overflow-hidden.rounded-t-md.flex.items-center.px-3.py-4 [:img {:src \\\"https://cdn.nextjournal.com/data/Qmdhk9WEogAvH9cgehnpq3REkATa91JiWgYNUtoSW74Q9A?filename=CleanShot%202021-11-30%20at%2018.45.46@2x.png&content-type=image/png\\\", :width \\\"100%\\\", :style {:object-fit \\\"contain\\\"}}]] [:div.sans-serif.border-t.border-gray-300.px-4.py-2.group-hover:border-indigo-600 [:div.font-bold.block.group-hover:text-indigo-600 \\\"The double pendulum\\\"] [:div.text-xs.text-gray-500.group-hover:text-indigo-600.leading-normal \\\"Simulate and visualize physical systems from the REPL.\\\"]]] [:a.rounded-lg.shadow-lg.border.border-gray-300.relative.flex.flex-col.hover:border-indigo-600.group.mb-8.md:mb-0 {:href #viewer-eval (v/doc-url \\\"notebooks/rule_30.clj\\\"), :style {:height 300}} [:div.flex-auto.overflow-hidden.rounded-t-md.flex.items-center.px-3.py-4 [:img {:src \\\"https://cdn.nextjournal.com/data/QmQCrqkdYtKfNm9CGbXhzY4cy6qG8xhpWaCRPF5m6biLgV?filename=CleanShot%202021-11-30%20at%2018.46.55@2x.png&content-type=image/png\\\", :width \\\"100%\\\", :style {:object-fit \\\"contain\\\"}}]] [:div.sans-serif.border-t.border-gray-300.px-4.py-2.group-hover:border-indigo-600 [:div.font-bold.block.group-hover:text-indigo-600 \\\"Rule 30\\\"] [:div.text-xs.text-gray-500.group-hover:text-indigo-600.leading-normal \\\"Cellular automata meet moldable viewers. 👾\\\"]]]], :nextjournal/viewer {:name :html, :render-fn #viewer-fn v/html}}\", :nextjournal/viewer {:name :html}}, :path []}], :title \"🎪 Clerk Demo on GitHub\"}, :nextjournal/viewer :clerk/notebook, :scope {:namespace :index}}}, :path->url {\"index.md\" \"\", \"notebooks/introduction.clj\" \"notebooks/introduction.html\", \"notebooks/data_science.clj\" \"notebooks/data_science.html\", \"notebooks/images.clj\" \"notebooks/images.html\", \"notebooks/semantic.clj\" \"notebooks/semantic.html\", \"notebooks/sicmutils.clj\" \"notebooks/sicmutils.html\", \"notebooks/rule_30.clj\" \"notebooks/rule_30.html\"}, :current-path \"index.md\"}")
+let opts = viewer.read_string("{:bundle? false, :paths [\"index.md\" \"notebooks/introduction.clj\" \"notebooks/data_science.clj\" \"notebooks/images.clj\" \"notebooks/semantic.clj\" \"notebooks/sicmutils.clj\" \"notebooks/rule_30.clj\"], :path-prefix \"clerk-demo/\", :git/sha \"34962e35854496319c934c1ab46962c44f23c58a\", :path->doc {\"index.md\" {:nextjournal/viewer {:name :clerk/notebook, :render-fn #viewer-fn v/notebook-viewer}, :nextjournal/value {:blocks [[#viewer-eval v/inspect {:nextjournal/viewer {:name :html-, :render-fn #viewer-fn v/html}, :nextjournal/value [:div.viewer-markdown [\"h1\" {:id \"%F0%9F%8E%AA%20Clerk%20Demo%20on%20GitHub\"} [:span \"🎪 Clerk Demo \"] [:a {:href \"https://github.com/nextjournal/clerk-demo\"} [:span \"on GitHub\"]]]]}] [#viewer-eval v/inspect {:nextjournal/viewer {:name :clerk/result, :render-fn #viewer-fn v/result-viewer}, :nextjournal/value {:nextjournal/edn \"{:nextjournal/viewer {:name :html, :render-fn #viewer-fn v/html}, :nextjournal/value [:div.md:grid.md:gap-8.md:grid-cols-2.pb-8 [:a.rounded-lg.shadow-lg.border.border-gray-300.relative.flex.flex-col.hover:border-indigo-600.group.mb-8.md:mb-0 {:href #viewer-eval (v/doc-url \\\"notebooks/introduction.clj\\\"), :style {:height 300}} [:div.flex-auto.overflow-hidden.rounded-t-md.flex.items-center.px-3.py-4 [:img {:src \\\"https://cdn.nextjournal.com/data/Qmb7qfVDvgcfeEQrfcPwD1DFipw8TuyW8Rno33NAJSYDjr?filename=introduction.png&content-type=image/png\\\", :width \\\"100%\\\", :style {:object-fit \\\"contain\\\"}}]] [:div.sans-serif.border-t.border-gray-300.px-4.py-2.group-hover:border-indigo-600 [:div.font-bold.block.group-hover:text-indigo-600 \\\"Introduction\\\"] [:div.text-xs.text-gray-500.group-hover:text-indigo-600.leading-normal \\\"A first look at Clerk, including many small usage examples.\\\"]]] [:a.rounded-lg.shadow-lg.border.border-gray-300.relative.flex.flex-col.hover:border-indigo-600.group.mb-8.md:mb-0 {:href #viewer-eval (v/doc-url \\\"notebooks/data_science.clj\\\"), :style {:height 300}} [:div.flex-auto.overflow-hidden.rounded-t-md.flex.items-center.px-3.py-4 [:img {:src \\\"https://cdn.nextjournal.com/data/QmcznoqioDQUKbH777pacrT4LDTwqmP1nmw7bfQ7uXrZQh?filename=CleanShot%202021-11-30%20at%2018.19.07@2x.png&content-type=image/png\\\", :width \\\"100%\\\", :style {:object-fit \\\"contain\\\"}}]] [:div.sans-serif.border-t.border-gray-300.px-4.py-2.group-hover:border-indigo-600 [:div.font-bold.block.group-hover:text-indigo-600 \\\"Data Science\\\"] [:div.text-xs.text-gray-500.group-hover:text-indigo-600.leading-normal \\\"An exploration of open data using Clerk.\\\"]]] [:a.rounded-lg.shadow-lg.border.border-gray-300.relative.flex.flex-col.hover:border-indigo-600.group.mb-8.md:mb-0 {:href #viewer-eval (v/doc-url \\\"notebooks/semantic.clj\\\"), :style {:height 300}} [:div.flex-auto.overflow-hidden.rounded-t-md.flex.items-center.px-3.py-4 [:img {:src \\\"https://cdn.nextjournal.com/data/QmYH2gBYSifEgNJDjGUjVAAaHWt5c4WD6Ko7Be7Be5f4hy?filename=CleanShot%202021-11-30%20at%2018.26.23@2x.png&content-type=image/png\\\", :width \\\"100%\\\", :style {:object-fit \\\"contain\\\"}}]] [:div.sans-serif.border-t.border-gray-300.px-4.py-2.group-hover:border-indigo-600 [:div.font-bold.block.group-hover:text-indigo-600 \\\"Semantic Queries\\\"] [:div.text-xs.text-gray-500.group-hover:text-indigo-600.leading-normal \\\"A starter kit for interactively exploring WikiData's vast semantic database.\\\"]]] [:a.rounded-lg.shadow-lg.border.border-gray-300.relative.flex.flex-col.hover:border-indigo-600.group.mb-8.md:mb-0 {:href #viewer-eval (v/doc-url \\\"notebooks/images.clj\\\"), :style {:height 300}} [:div.flex-auto.overflow-hidden.rounded-t-md.flex.items-center.px-3.py-4 [:img {:src \\\"https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/The_Sower.jpg/1510px-The_Sower.jpg\\\", :width \\\"100%\\\", :style {:object-fit \\\"contain\\\"}}]] [:div.sans-serif.border-t.border-gray-300.px-4.py-2.group-hover:border-indigo-600 [:div.font-bold.block.group-hover:text-indigo-600 \\\"Images\\\"] [:div.text-xs.text-gray-500.group-hover:text-indigo-600.leading-normal \\\"Some examples about dealing with images.\\\"]]] [:a.rounded-lg.shadow-lg.border.border-gray-300.relative.flex.flex-col.hover:border-indigo-600.group.mb-8.md:mb-0 {:href #viewer-eval (v/doc-url \\\"notebooks/sicmutils.clj\\\"), :style {:height 300}} [:div.flex-auto.overflow-hidden.rounded-t-md.flex.items-center.px-3.py-4 [:img {:src \\\"https://cdn.nextjournal.com/data/Qmdhk9WEogAvH9cgehnpq3REkATa91JiWgYNUtoSW74Q9A?filename=CleanShot%202021-11-30%20at%2018.45.46@2x.png&content-type=image/png\\\", :width \\\"100%\\\", :style {:object-fit \\\"contain\\\"}}]] [:div.sans-serif.border-t.border-gray-300.px-4.py-2.group-hover:border-indigo-600 [:div.font-bold.block.group-hover:text-indigo-600 \\\"The double pendulum\\\"] [:div.text-xs.text-gray-500.group-hover:text-indigo-600.leading-normal \\\"Simulate and visualize physical systems from the REPL.\\\"]]] [:a.rounded-lg.shadow-lg.border.border-gray-300.relative.flex.flex-col.hover:border-indigo-600.group.mb-8.md:mb-0 {:href #viewer-eval (v/doc-url \\\"notebooks/rule_30.clj\\\"), :style {:height 300}} [:div.flex-auto.overflow-hidden.rounded-t-md.flex.items-center.px-3.py-4 [:img {:src \\\"https://cdn.nextjournal.com/data/QmQCrqkdYtKfNm9CGbXhzY4cy6qG8xhpWaCRPF5m6biLgV?filename=CleanShot%202021-11-30%20at%2018.46.55@2x.png&content-type=image/png\\\", :width \\\"100%\\\", :style {:object-fit \\\"contain\\\"}}]] [:div.sans-serif.border-t.border-gray-300.px-4.py-2.group-hover:border-indigo-600 [:div.font-bold.block.group-hover:text-indigo-600 \\\"Rule 30\\\"] [:div.text-xs.text-gray-500.group-hover:text-indigo-600.leading-normal \\\"Cellular automata meet moldable viewers. 👾\\\"]]]], :path []}\", :nextjournal/viewer {:name :html}}, :path []}]], :title \"🎪 Clerk Demo on GitHub\", :scope {:namespace :index}}, :path []}}, :path->url {\"index.md\" \"\", \"notebooks/introduction.clj\" \"notebooks/introduction.html\", \"notebooks/data_science.clj\" \"notebooks/data_science.html\", \"notebooks/images.clj\" \"notebooks/images.html\", \"notebooks/semantic.clj\" \"notebooks/semantic.html\", \"notebooks/sicmutils.clj\" \"notebooks/sicmutils.html\", \"notebooks/rule_30.clj\" \"notebooks/rule_30.html\"}, :current-path \"index.md\"}")
 app.init(opts)
 </script></body></html>
