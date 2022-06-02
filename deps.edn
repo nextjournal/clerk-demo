@@ -1,13 +1,14 @@
 {:paths ["dev" "notebooks" "resources"]
  :deps {io.github.nextjournal/clerk {:mvn/version "0.8.442"}
+        io.github.nextjournal/clerk-slideshow {:git/sha "82b3b83ca456995250bdb99deceb5a24fdd75439"}
 
         ;; input various external data formats
-        com.github.seancorfield/next.jdbc  {:mvn/version "1.2.659"}
-        meta-csv/meta-csv                  {:mvn/version "0.1.0"}
-        org.xerial/sqlite-jdbc             {:mvn/version "3.34.0"}
-        dk.ative/docjure                   {:mvn/version "1.16.0"}
-        clojusc/wordnet                    {:mvn/version "1.2.0"}
-        clj-jgit/clj-jgit                  {:mvn/version "1.0.2"}
+        com.github.seancorfield/next.jdbc {:mvn/version "1.2.659"}
+        meta-csv/meta-csv {:mvn/version "0.1.0"}
+        org.xerial/sqlite-jdbc {:mvn/version "3.34.0"}
+        dk.ative/docjure {:mvn/version "1.16.0"}
+        clojusc/wordnet {:mvn/version "1.2.0"}
+        clj-jgit/clj-jgit {:mvn/version "1.0.2"}
 
         ;; some statistical routines
         kixi/stats {:mvn/version "0.5.4"}
@@ -16,9 +17,9 @@
         sicmutils/sicmutils {:mvn/version "0.22.0"}
 
         ;; semantic web goodies and box/arrow graphs
-        jackrusher/mundaneum               {:git/url "https://github.com/jackrusher/mundaneum/"
-                                            :git/sha "d2c934a12388d88ddb3e53fef92ec2eef97d6140"}
-        arrowic/arrowic                    {:mvn/version "0.1.1"}
+        jackrusher/mundaneum {:git/url "https://github.com/jackrusher/mundaneum/"
+                              :git/sha "d2c934a12388d88ddb3e53fef92ec2eef97d6140"}
+        arrowic/arrowic {:mvn/version "0.1.1"}
 
         ;; 2D drawing routines
         clojure2d/clojure2d                {:mvn/version "1.4.4"}
@@ -33,6 +34,7 @@
    ;; notebooks to be built, accepts globs patterns
    :exec-args {:bundle? false
                :paths ["index.md"
+                       "notebooks/slideshow.md"
                        "notebooks/introduction.clj"
                        "notebooks/data_science.clj"
                        "notebooks/images.clj"
