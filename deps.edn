@@ -40,4 +40,5 @@
                        "notebooks/images.clj"
                        "notebooks/semantic.clj"
                        "notebooks/sicmutils.clj"
-                       "notebooks/rule_30.clj"]}}}}
+                       "notebooks/rule_30.clj"
+                       "notebooks/zipper_with_scars.clj"]}}}}
