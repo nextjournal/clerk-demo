@@ -41,4 +41,7 @@
                        "notebooks/semantic.clj"
                        "notebooks/sicmutils.clj"
                        "notebooks/rule_30.clj"
-                       "notebooks/zipper_with_scars.clj"]}}}}
+                       "notebooks/zipper_with_scars.clj"]}}
+  :nREPL
+  {:extra-deps
+   {nrepl/nrepl {:mvn/version "0.9.0"}}}}}
