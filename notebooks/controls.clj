@@ -1,6 +1,6 @@
 ;; # Controls! 🎛
 ^{:nextjournal.clerk/visibility #{:hide-ns}}
-(ns controls
+(ns ^:nextjournal.clerk/no-cache controls
   (:require [clojure.string :as str]
             [nextjournal.clerk :as clerk]))
 
