@@ -13,9 +13,9 @@
 
 (def slider
   {:pred ::clerk/var-from-def
-   :fetch-fn (fn [_ x] x)
-   :transform-fn (fn [{::clerk/keys [var-from-def]}]
-                   {:var-name (symbol var-from-def) :value @@var-from-def})
+   :transform-fn (comp clerk/mark-presented
+                       (clerk/update-val (fn [{::clerk/keys [var-from-def]}]
+                                           {:var-name (symbol var-from-def) :value @@var-from-def})))
    :render-fn '(fn [{:keys [var-name value]}]
                  (v/html [:input {:type :range
                                   :initial-value value
@@ -43,20 +43,20 @@
   ;; (that is, the form Clerk is evaluating defines a var).
   {:pred ::clerk/var-from-def
 
-   ;; Normally, Clerk's front-end is very careful to fetch data from
-   ;; the JVM is bite-sized chunks to avoid killing the browser. But
-   ;; sometimes we need to override that mechanism, which is done by
-   ;; specifying an alternative `:fetch-fn`. In this case, we use a
-   ;; tiny function that says "just give me the whole value!"
-   :fetch-fn (fn [_ x] x)
-
    ;; When we specify a `:transform-fn`, it gets run on the JVM side
    ;; to pre-process our value before sending it to the front-end. In
    ;; this case we want to send the symbol for the var along with the
    ;; unwrapped value because our custom renderer will need to know
    ;; both of those things (see below).
-   :transform-fn (fn [{::clerk/keys [var-from-def]}]
-                   {:var-name (symbol var-from-def) :value @@var-from-def})
+   ;;
+   ;; Normally, Clerk's front-end is very careful to fetch data from
+   ;; the JVM is bite-sized chunks to avoid killing the browser. But
+   ;; sometimes we need to override that mechanism, which is done by
+   ;; calling `clerk/mark-presented` to ask Clerk to send the whole
+   ;; value as-is to the browser.
+   :transform-fn (comp clerk/mark-presented
+                       (clerk/update-val (fn [{::clerk/keys [var-from-def]}]
+                                           {:var-name (symbol var-from-def) :value @@var-from-def})))
 
    ;; The `:render-fn` is the heart of any viewer. It will be executed
    ;; by a ClojureScript runtime in the browser, so — unlike these
