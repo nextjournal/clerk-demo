@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html class="overflow-hidden min-h-screen"><head><title>Clerk</title><meta charset="UTF-8"><meta content="width=device-width, initial-scale=1" name="viewport"><script src="https://cdn.tailwindcss.com?plugins=typography" type="text/javascript"></script><script>tailwind.config = {
+  darkMode: "class",
+  content: ["./public/build/index.html", "./public/build/**/*.html", "./build/viewer.js"],
+  safelist: ['dark'],
+  theme: {
+    extend: {},
+    fontFamily: {
+      sans: ["Fira Sans", "-apple-system", "BlinkMacSystemFont", "sans-serif"],
+      serif: ["PT Serif", "serif"],
+      mono: ["Fira Mono", "monospace"]
+    }
+  },
+  variants: {
+    extend: {},
+  },
+  plugins: [],
+}
+</script><style type="text/tailwindcss">@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    font-size: 18px;
+  }
+  @media (max-width: 600px) {
+    html {
+      font-size: 16px;
+    }
+  }
+  .font-condensed { font-family: "Fira Sans Condensed", sans-serif; }
+  .font-inter     { font-family: "Inter", sans-serif; }
+  body {
+    @apply font-serif antialiased text-gray-900 sm:overscroll-y-none;
+  }
+  code, .code {
+    @apply font-mono text-sm text-gray-900 bg-slate-50 px-0.5 py-px rounded dark:bg-gray-800;
+  }
+  code::before, code::after { @apply content-none !important; }
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-condensed font-bold mt-8 first:mt-0;
+  }
+  h1 { @apply text-4xl; }
+  h2 { @apply text-3xl; }
+  h3 { @apply text-2xl; }
+
+  button { @apply focus:outline-none; }
+  strong { @apply font-bold; }
+  em     { @apply italic; }
+  pre    { @apply m-0 font-mono; }
+}
+
+/* Compatibility */
+/* --------------------------------------------------------------- */
+/* TODO: Verify which colors are in use and replace with Tailwind
+   colors accordingly. Move Nj-specific styles out of here. */
+
+:root {
+  --teal-color: #31afd0;
+  --dark-teal-color: #095960;
+  --near-black-color: #2e2e2c;
+  --red-color: #d64242;
+  --dark-blue-color: #1f2937;
+  --dark-blue-60-color: rgba(28, 42, 56, 0.6);
+  --gray-panel-color: rgba(239, 241, 245, 1.000);
+  --brand-color: var(--dark-blue-color);
+  --link-color: #5046e4;
+  --command-bar-selected-color: var(--teal-color);
+}
+
+.serif      { @apply font-serif; }
+.sans-serif { @apply font-sans; }
+.monospace  { @apply font-mono; }
+.inter      { @apply font-inter; }
+
+.border-color-teal { border-color: var(--dark-teal-color); }
+.teal { color: var(--teal-color); }
+.bg-dark-blue { background: var(--dark-blue-color); }
+.bg-dark-blue-60 { background: rgba(28, 42, 56, 0.6); }
+.bg-gray-panel { background: var(--gray-panel-color); }
+.text-dark-blue  { color: var(--dark-blue-color); }
+.text-dark-blue-60 { color: var(--dark-blue-60-color); }
+.border-dark-blue-30 { border-color: rgba(28, 42, 56, 0.6); }
+.text-brand { color: var(--dark-blue-color); }
+.bg-brand { background: var(--dark-blue-color); }
+.text-selected { color: white; }
+.red { color: var(--red-color); }
+
+/* Disclose Button */
+/* --------------------------------------------------------------- */
+
+.disclose {
+  @apply content-none border-solid cursor-pointer inline-block relative mr-[3px] top-[-2px] transition-all;
+  border-color: var(--near-black-color) transparent;
+  border-width: 6px 4px 0;
+}
+.disclose:hover {
+  border-color: var(--near-black-color) transparent;
+}
+.dark .disclose,
+.dark .disclose:hover {
+  border-color: white transparent;
+}
+.disclose.collapsed {
+  @apply rotate-[-90deg];
+}
+
+/* Layout */
+/* --------------------------------------------------------------- */
+
+.page {
+  @apply max-w-5xl mx-auto px-12 box-border flex-shrink-0;
+}
+.max-w-prose { @apply max-w-[46rem] !important; }
+.max-w-wide  { @apply max-w-3xl !important; }
+
+/* List Styles */
+/* --------------------------------------------------------------- */
+
+.task-list-item + .task-list-item,
+.viewer-markdown ul .task-list-item ul {
+  @apply mt-1;
+}
+
+/* compact TOC */
+.viewer-markdown .toc ul {
+  list-style: none;
+  @apply my-0;
+}
+
+/* Code Viewer */
+/* --------------------------------------------------------------- */
+
+.viewer-code {
+  @apply font-mono bg-slate-100 rounded-sm text-sm mt-4 overflow-x-auto dark:bg-gray-800;
+}
+.viewer-code .cm-content {
+  @apply py-4 px-8;
+}
+@media (min-width: 960px){
+  .viewer-notebook .viewer-code .cm-content {
+    @apply py-4 pl-12;
+  }
+}
+/* Don’t show focus outline when double-clicking cell in Safari */
+.cm-scroller { @apply focus:outline-none; }
+
+/* Syntax Highlighting */
+/* --------------------------------------------------------------- */
+
+.inspected-value { @apply text-xs font-mono leading-[1.25rem]; }
+.cmt-strong, .cmt-heading { @apply font-bold; }
+.cmt-emphasis { @apply italic; }
+.cmt-strikethrough { @apply line-through; }
+.cmt-link { @apply underline; }
+.untyped-value { @apply whitespace-nowrap; }
+
+.cm-editor, .cmt-default, .viewer-result {
+  @apply text-slate-800 dark:text-slate-300;
+}
+.cmt-keyword {
+  @apply text-purple-800 dark:text-pink-400;
+}
+.cmt-atom, .cmt-bool, .cmt-url, .cmt-contentSeparator, .cmt-labelName {
+  @apply text-blue-900 dark:text-blue-300;
+}
+.cmt-inserted, .cmt-literal {
+  @apply text-emerald-700 dark:text-emerald-200;
+}
+.cmt-string, .cmt-deleted {
+  @apply text-rose-700 dark:text-sky-300;
+}
+.cmt-regexp, .cmt-escape {
+  @apply text-orange-500 dark:text-orange-300;
+}
+.cmt-variableName {
+  @apply text-blue-800 dark:text-sky-300;
+}
+.cmt-typeName, .cmt-namespace {
+  @apply text-emerald-600 dark:text-emerald-300;
+}
+.cmt-className {
+  @apply text-teal-600 dark:text-teal-200;
+}
+.cmt-macroName {
+  @apply text-teal-700 dark:text-teal-200;
+}
+.cmt-propertyName {
+  @apply text-blue-700 dark:text-blue-200;
+}
+.cmt-comment {
+  @apply text-slate-500 dark:text-slate-400;
+}
+.cmt-meta {
+  @apply text-slate-600 dark:text-slate-400;
+}
+.cmt-invalid {
+  @apply text-red-500 dark:text-red-300;
+}
+
+.result-data {
+  @apply font-mono text-sm overflow-x-auto whitespace-nowrap leading-normal;
+}
+.result-data::-webkit-scrollbar, .path-nav::-webkit-scrollbar {
+  @apply h-0;
+}
+.result-data-collapsed {
+  @apply whitespace-nowrap;
+}
+.result-data-field {
+  @apply ml-4 whitespace-nowrap;
+}
+.result-data-field-link{
+  @apply ml-4 whitespace-nowrap cursor-pointer;
+}
+.result-data-field-link:hover {
+  @apply text-black bg-black/5;
+}
+.result-text-empty {
+  color: rgba(0,0,0,.3);
+}
+.browsify-button:hover {
+  box-shadow: -2px 0 0 2px #edf2f7;
+}
+
+/* Prose */
+/* --------------------------------------------------------------- */
+
+.viewer-notebook,
+.viewer-markdown {
+  @apply prose
+    dark:prose-invert
+    prose-a:text-blue-600 prose-a:no-underline hover:prose-a:underline
+    dark:prose-a:text-blue-300
+    prose-p:mt-4 prose-p:leading-snug
+    prose-ol:mt-4 prose-ol:mb-6 prose-ol:leading-snug
+    prose-ul:mt-4 prose-ul:mb-6 prose-ul:leading-snug
+    prose-blockquote:mt-4 prose-blockquote:leading-snug
+    prose-hr:mt-6 prose-hr:border-t-2 prose-hr:border-solid prose-hr:border-slate-200
+    prose-figure:mt-4
+    prose-figcaption:mt-2 prose-figcaption:text-xs
+    prose-headings:mb-6
+    prose-th:mb-0
+    prose-img:mb-0
+    prose-code:font-medium prose-code:bg-slate-100
+    max-w-none;
+}
+.viewer-markdown li > p {
+  @apply inline;
+}
+.viewer-markdown blockquote p:first-of-type:before,
+.viewer-markdown blockquote p:last-of-type:after {
+  @apply content-none;
+}
+
+/* Todo Lists */
+/* --------------------------------------------------------------- */
+
+.contains-task-list {
+  @apply pl-6 list-none;
+}
+.contains-task-list li p {
+  @apply inline m-0;
+}
+.contains-task-list input[type="checkbox"] {
+  @apply appearance-none h-4 w-4 rounded border border-slate-200 relative mr-[0.3rem] ml-[-1.5rem] top-[0.15rem];
+}
+.contains-task-list input[type="checkbox"]:checked {
+  @apply border-indigo-600 bg-indigo-600 bg-no-repeat bg-contain;
+  background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z'/%3e%3c/svg%3e");
+}
+
+/* Markdown TOC */
+/* --------------------------------------------------------------- */
+
+.viewer-markdown .toc      { @apply mt-4; }
+.viewer-markdown h1 + .toc { @apply mt-8; }
+
+.viewer-markdown .toc h1,
+.viewer-markdown .toc h2,
+.viewer-markdown .toc h3,
+.viewer-markdown .toc h4,
+.viewer-markdown .toc h5,
+.viewer-markdown .toc h6 {
+  @apply text-base text-indigo-600 font-sans my-0;
+}
+.viewer-markdown .toc a {
+  @apply text-indigo-600 font-normal no-underline hover:underline;
+}
+.viewer-markdown .toc li    { @apply m-0; }
+.viewer-markdown .toc ul ul { @apply pl-4; }
+
+/* Notebook Spacing */
+/* --------------------------------------------------------------- */
+
+.viewer-notebook { @apply py-16; }
+#clerk-static-app .viewer-notebook { @apply pt-[0.8rem] pb-16; }
+.viewer-markdown *:first-child:not(.viewer-code) { @apply mt-0; }
+.viewer + .viewer { @apply mt-6; }
+.viewer-markdown + .viewer { @apply mt-3; }
+.viewer-markdown + .viewer-markdown { @apply mt-0; }
+
+/* Sidenotes */
+/* --------------------------------------------------------------- */
+
+.sidenote-ref {
+  @apply top-[-3px] inline-flex justify-center items-center w-[18px] h-[18px]
+    rounded-full bg-slate-100 border border-slate-300 hover:bg-slate-200 hover:border-slate-300
+    m-0 ml-[4px] cursor-pointer;
+}
+.sidenote {
+  @apply hidden float-left clear-both mx-[2.5%] my-4 text-xs relative w-[95%];
+}
+.sidenote-ref.expanded + .sidenote {
+  @apply block;
+}
+@media (min-width: 860px) {
+  .sidenote-ref {
+    @apply top-[-0.5em] w-auto h-auto inline border-0 bg-transparent m-0 pointer-events-none;
+  }
+  .sidenote sup { @apply inline; }
+  .viewer-markdown .contains-sidenotes p { @apply max-w-[65%]; }
+  .viewer-markdown p .sidenote {
+    @apply mr-[-54%] mt-[0.2rem] w-1/2 float-right clear-right relative block;
+  }
+}
+.viewer-code + .viewer:not(.viewer-markdown):not(.viewer-code):not(.viewer-code-folded),
+.viewer-code-folded + .viewer:not(.viewer-markdown):not(.viewer-code):not(.viewer-code-folded),
+.viewer-result + .viewer-result {
+  @apply mt-2;
+}
+.viewer-result {
+  @apply leading-tight;
+}
+@media (min-width: 768px) {
+  .devcard-desc > div {
+    @apply max-w-full m-0;
+  }
+}
+
+/* Command Palette */
+/* --------------------------------------------------------------- */
+
+.nj-commands-input {
+  @apply bg-transparent text-white;
+}
+.nj-context-menu-item:hover:not([disabled]) {
+  @apply cursor-pointer;
+  background-color: rgba(255,255,255,.14);
+}
+
+/* Devdocs */
+/* --------------------------------------------------------------- */
+
+.logo, .logo-white {
+  @apply block indent-[-999em];
+  background: url(/images/nextjournal-logo.svg) center center no-repeat;
+}
+.devdocs-body {
+  @apply font-inter;
+}
+
+/* Workarounds */
+/* --------------------------------------------------------------- */
+
+/* Fixes vega viewer resizing into infinity */
+.vega-embed .chart-wrapper { @apply h-auto !important; }
+/* fixes fraction separators being overridden by tw’s border-color */
+.katex * { @apply border-black; }
+</style><script src="https://storage.googleapis.com/nextjournal-cas-eu/data/2TzHeWvbqwkSZJnxXFBhCdDWf2kcQSVWqWECcHxoJzeXKg5uSTKJeWNb9bZYmH75jFqxHqgfwyLirfZCr5TpAgs2" type="text/javascript"></script><link href="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.css" rel="stylesheet" type="text/css"><link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&amp;family=Fira+Mono:wght@400;700&amp;family=Fira+Sans+Condensed:ital,wght@0,700;1,700&amp;family=Fira+Sans:ital,wght@0,400;0,500;0,700;1,400;1,500;1,700&amp;family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&amp;display=swap" rel="stylesheet" type="text/css"></head><body><div id="clerk-static-app"></div><script>let viewer = nextjournal.clerk.sci_viewer
+let app = nextjournal.clerk.static_app
+let opts = viewer.read_string("{:bundle? false, :git/url \"https://github.com/nextjournal/clerk-demo\", :paths [\"index.md\" \"notebooks/introduction.clj\" \"notebooks/rule_30.clj\" \"notebooks/data_science.clj\" \"notebooks/sicmutils.clj\" \"notebooks/slideshow.md\" \"notebooks/images.clj\" \"notebooks/zipper_with_scars.clj\" \"notebooks/semantic.clj\"], :path-prefix \"clerk-demo/\", :git/sha \"68c3cae304115b79ea063049b10f0d08ac2be44d\", :path->doc {\"notebooks/slideshow.md\" {:nextjournal/viewer {:name :clerk/notebook, :render-fn #viewer-fn (fn [slides] (v/html (reagent/with-let [!state (reagent/atom {:current-slide 0, :grid? false, :viewport-width js/innerWidth, :viewport-height js/innerHeight}) ref-fn (fn [el] (when el (swap! !state assoc :stage-el el) (js/addEventListener \"resize\" (fn* [] (swap! !state assoc :viewport-width js/innerWidth :viewport-height js/innerHeight))) (js/document.addEventListener \"keydown\" (fn [e] (case (.-key e) \"Escape\" (swap! !state update :grid? not) \"ArrowRight\" (when-not (:grid? !state) (swap! !state update :current-slide (fn* [p1__13897#] (min (dec (count slides)) (inc p1__13897#))))) \"ArrowLeft\" (when-not (:grid? !state) (swap! !state update :current-slide (fn* [p1__13898#] (max 0 (dec p1__13898#))))) nil))))) default-transition {:type :spring, :duration 0.4, :bounce 0.1}] (let [{:keys [grid? current-slide viewport-width viewport-height]} (clojure.core/deref !state)] [:div.overflow-hidden.relative.bg-slate-50 {:ref ref-fn, :id \"stage\", :style {:width viewport-width, :height viewport-height}} (into [:> (.. framer-motion -motion -div) {:style {:width (if grid? viewport-width (* (count slides) viewport-width))}, :initial false, :animate {:x (if grid? 0 (* -1 current-slide viewport-width))}, :transition default-transition}] (map-indexed (fn [i slide] (let [width 250 height 150 gap 40 slides-per-row (int (/ viewport-width (+ gap width))) col (mod i slides-per-row) row (int (/ i slides-per-row))] [:> (.. framer-motion -motion -div) {:initial false, :class [\"absolute left-0 top-0 overflow-x-hidden bg-white\" (when grid? \"rounded-lg shadow-lg overflow-y-hidden cursor-pointer ring-1 ring-slate-200 hover:ring hover:ring-blue-500/50 active:ring-blue-500\")], :animate {:width (if grid? width viewport-width), :height (if grid? height viewport-height), :x (if grid? (+ gap (* (+ gap width) col)) (* i viewport-width)), :y (if grid? (+ gap (* (+ gap height) row)) 0)}, :transition default-transition, :on-click (fn* [] (when grid? (swap! !state assoc :current-slide i :grid? false)))} [:> (.. framer-motion -motion -div) {:style {:width viewport-width, :height viewport-height, :transformOrigin \"left top\"}, :initial false, :animate {:scale (if grid? (/ width viewport-width) 1)}, :transition default-transition} slide]])) slides))]))))}, :nextjournal/value ([:div.flex.flex-col.justify-center {:style {:min-block-size \"100vh\"}} [:div.text-xl.p-20 {:class [\"prose max-w-none prose-h1:mb-0 prose-h2:mb-8 rose-h3:mb-8 prose-h4:mb-8\" \"prose-h1:text-6xl prose-h2:text-5xl prose-h3:text-3xl prose-h4:text-2xl\"]} [#viewer-eval v/inspect {:nextjournal/viewer {:name :html-, :render-fn #viewer-fn v/html}, :nextjournal/value [\"h1\" {:id \"Hello%20there%20%F0%9F%91%8B\"} [:span \"Hello there 👋\"]]}] [#viewer-eval v/inspect {:nextjournal/viewer {:name :html-, :render-fn #viewer-fn v/html}, :nextjournal/value [:p [:code [:span \"clerk-slideshow\"]] [:span \" enables you to create beautiful interactive slide decks\"] [#viewer-eval v/inspect {:nextjournal/viewer {:name :html, :render-fn #viewer-fn v/html}, :nextjournal/value [:span \" \"]}] [:span \"using Clerk notebooks.\"]]}]]] [:div.flex.flex-col.justify-center {:style {:min-block-size \"100vh\"}} [:div.text-xl.p-20 {:class [\"prose max-w-none prose-h1:mb-0 prose-h2:mb-8 rose-h3:mb-8 prose-h4:mb-8\" \"prose-h1:text-6xl prose-h2:text-5xl prose-h3:text-3xl prose-h4:text-2xl\"]} [#viewer-eval v/inspect {:nextjournal/viewer {:name :html-, :render-fn #viewer-fn v/html}, :nextjournal/value [\"h2\" {:id \"How%20does%20it%20work?\"} [:span \"How does it work?\"]]}] [#viewer-eval v/inspect {:nextjournal/viewer {:name :html-, :render-fn #viewer-fn v/html}, :nextjournal/value [:p [:span \"Simply require \"] [:code [:span \"clerk-slideshow\"]] [:span \"…\"]]}] [#viewer-eval v/inspect {:nextjournal/viewer {:name :html, :render-fn #viewer-fn v/html}, :nextjournal/value [:div.viewer-code [#viewer-eval v/inspect {:nextjournal/viewer {:name :code, :render-fn #viewer-fn v/code-viewer}, :nextjournal/value \"(ns simple-slideshow\\n    (:require [nextjournal.clerk :as clerk]\\n      [nextjournal.clerk-slideshow :as slideshow]))\"}]]}] [#viewer-eval v/inspect {:nextjournal/viewer {:name :clerk/result, :render-fn #viewer-fn v/result-viewer}, :nextjournal/value {:nextjournal/edn \"{:nextjournal/viewer {:render-fn #viewer-fn (fn [_] (v/html [:span.cmt-default.inspected-value \\\"nil\\\"]))}, :nextjournal/value nil, :path []}\"}}] [#viewer-eval v/inspect {:nextjournal/viewer {:name :html-, :render-fn #viewer-fn v/html}, :nextjournal/value [:p [:span \"…and add it to Clerk’s existing viewers:\"]]}] [#viewer-eval v/inspect {:nextjournal/viewer {:name :html, :render-fn #viewer-fn v/html}, :nextjournal/value [:div.viewer-code [#viewer-eval v/inspect {:nextjournal/viewer {:name :code, :render-fn #viewer-fn v/code-viewer}, :nextjournal/value \"^{::clerk/viewer clerk/hide-result}\\n  (clerk/add-viewers! [slideshow/viewer])\"}]]}]]] [:div.flex.flex-col.justify-center {:style {:min-block-size \"100vh\"}} [:div.text-xl.p-20 {:class [\"prose max-w-none prose-h1:mb-0 prose-h2:mb-8 rose-h3:mb-8 prose-h4:mb-8\" \"prose-h1:text-6xl prose-h2:text-5xl prose-h3:text-3xl prose-h4:text-2xl\"]} [#viewer-eval v/inspect {:nextjournal/viewer {:name :html-, :render-fn #viewer-fn v/html}, :nextjournal/value [\"h2\" {:id \"What%20now?\"} [:span \"What now?\"]]}] [#viewer-eval v/inspect {:nextjournal/viewer {:name :html-, :render-fn #viewer-fn v/html}, :nextjournal/value [:p [:span \"With that in place, you can use Markdown comments to write your slides’ content.\"] [#viewer-eval v/inspect {:nextjournal/viewer {:name :html, :render-fn #viewer-fn v/html}, :nextjournal/value [:span \" \"]}] [:span \"Use Markdown rulers (\"] [:code [:span \"---\"]] [:span \") to separate your slides. You can use everything that\"] [#viewer-eval v/inspect {:nextjournal/viewer {:name :html, :render-fn #viewer-fn v/html}, :nextjournal/value [:span \" \"]}] [:span \"you’ll normally use in your Clerk notebooks:\"] [#viewer-eval v/inspect {:nextjournal/viewer {:name :html, :render-fn #viewer-fn v/html}, :nextjournal/value [:span \" \"]}] [:span \"Markdown, plots, code blocks, you name it.\"]]}] [#viewer-eval v/inspect {:nextjournal/viewer {:name :html-, :render-fn #viewer-fn v/html}, :nextjournal/value [:p [:span \"Press \"] [:code [:span \"←\"]] [:span \" and \"] [:code [:span \"→\"]] [:span \" to navigate between slides or \"] [:code [:span \"Escape\"]] [:span \" to get an overview.\"]]}] [#viewer-eval v/inspect {:nextjournal/viewer {:name :html-, :render-fn #viewer-fn v/html}, :nextjournal/value [:p [:span \"Now some demos 👉\"]]}]]] [:div.flex.flex-col.justify-center {:style {:min-block-size \"100vh\"}} [:div.text-xl.p-20 {:class [\"prose max-w-none prose-h1:mb-0 prose-h2:mb-8 rose-h3:mb-8 prose-h4:mb-8\" \"prose-h1:text-6xl prose-h2:text-5xl prose-h3:text-3xl prose-h4:text-2xl\"]} [#viewer-eval v/inspect {:nextjournal/viewer {:name :html-, :render-fn #viewer-fn v/html}, :nextjournal/value [\"h2\" {:id \"%F0%9F%93%8A%20A%20Plotly%20graph\"} [:span \"📊 A Plotly graph\"]]}] [#viewer-eval v/inspect {:nextjournal/viewer {:name :clerk/result, :render-fn #viewer-fn v/result-viewer}, :nextjournal/value {:nextjournal/edn \"{:nextjournal/viewer {:name :plotly, :render-fn #viewer-fn v/plotly-viewer}, :nextjournal/value {:data [{:z [[1 2 3] [3 2 1]], :type \\\"surface\\\"}]}, :path []}\", :nextjournal/viewer {:name :plotly}}}]]] [:div.flex.flex-col.justify-center {:style {:min-block-size \"100vh\"}} [:div.text-xl.p-20 {:class [\"prose max-w-none prose-h1:mb-0 prose-h2:mb-8 rose-h3:mb-8 prose-h4:mb-8\" \"prose-h1:text-6xl prose-h2:text-5xl prose-h3:text-3xl prose-h4:text-2xl\"]} [#viewer-eval v/inspect {:nextjournal/viewer {:name :html-, :render-fn #viewer-fn v/html}, :nextjournal/value [\"h2\" {:id \"%F0%9F%93%88%20A%20Vega%20Lite%20graph\"} [:span \"📈 A Vega Lite graph\"]]}] [#viewer-eval v/inspect {:nextjournal/viewer {:name :clerk/result, :render-fn #viewer-fn v/result-viewer}, :nextjournal/value {:nextjournal/edn \"{:nextjournal/viewer {:name :vega-lite, :render-fn #viewer-fn v/vega-lite-viewer}, :nextjournal/value {:width 650, :height 400, :data {:url \\\"https://vega.github.io/vega-datasets/data/us-10m.json\\\", :format {:type \\\"topojson\\\", :feature \\\"counties\\\"}}, :transform [{:lookup \\\"id\\\", :from {:data {:url \\\"https://vega.github.io/vega-datasets/data/unemployment.tsv\\\"}, :key \\\"id\\\", :fields [\\\"rate\\\"]}}], :projection {:type \\\"albersUsa\\\"}, :mark \\\"geoshape\\\", :encoding {:color {:field \\\"rate\\\", :type \\\"quantitative\\\"}}}, :path []}\", :nextjournal/viewer {:name :vega-lite}}}]]] [:div.flex.flex-col.justify-center {:style {:min-block-size \"100vh\"}} [:div.text-xl.p-20 {:class [\"prose max-w-none prose-h1:mb-0 prose-h2:mb-8 rose-h3:mb-8 prose-h4:mb-8\" \"prose-h1:text-6xl prose-h2:text-5xl prose-h3:text-3xl prose-h4:text-2xl\"]} [#viewer-eval v/inspect {:nextjournal/viewer {:name :html-, :render-fn #viewer-fn v/html}, :nextjournal/value [\"h2\" {:id \"And%20that%E2%80%99s%20it%20for%20now!%20%F0%9F%91%8B\"} [:span \"And that’s it for now! 👋\"]]}] [#viewer-eval v/inspect {:nextjournal/viewer {:name :html-, :render-fn #viewer-fn v/html}, :nextjournal/value [:p [:span \"More demos will follow soon!\"]]}]]]), :path []}}, :path->url {\"index.md\" \"\", \"notebooks/introduction.clj\" \"notebooks/introduction.html\", \"notebooks/rule_30.clj\" \"notebooks/rule_30.html\", \"notebooks/data_science.clj\" \"notebooks/data_science.html\", \"notebooks/sicmutils.clj\" \"notebooks/sicmutils.html\", \"notebooks/slideshow.md\" \"notebooks/slideshow.html\", \"notebooks/images.clj\" \"notebooks/images.html\", \"notebooks/zipper_with_scars.clj\" \"notebooks/zipper_with_scars.html\", \"notebooks/semantic.clj\" \"notebooks/semantic.html\"}, :current-path \"notebooks/slideshow.md\"}")
+app.init(opts)
+</script></body></html>
