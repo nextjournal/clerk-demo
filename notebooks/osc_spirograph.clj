@@ -6,28 +6,34 @@
 ^{:nextjournal.clerk/visibility :hide-ns}
 (ns osc-spirograph
   (:require [nextjournal.clerk :as clerk]
-            [clojure.java.io :as io])
-  (:import (com.illposed.osc ConsoleEchoServer OSCMessageListener OSCMessageEvent OSCMessage)
+            [clojure.java.io :as io]
+            [nextjournal.clerk.viewer :as v])
+  (:import (com.illposed.osc ConsoleEchoServer OSCMessageListener OSCMessageEvent OSCMessage OSCBundle)
            (com.illposed.osc.messageselector JavaRegexAddressMessageSelector)
+           (com.illposed.osc.transport OSCPortOut)
            (org.slf4j LoggerFactory)
            (java.net InetSocketAddress)
-           (javax.imageio ImageIO)))
+           (javax.imageio ImageIO)
+           (java.util List ArrayList)))
 
 ^{::clerk/visibility :fold :nextjournal.clerk/viewer :hide-result}
 (def client-model-sync
   ;; This viewer is used to sync models between clojure values and those on the client side
-  {:fetch-fn (fn [_ x] x)
-   :transform-fn (fn [{::clerk/keys [var-from-def]}] {:value @@var-from-def})
-   :render-fn '(fn [{:keys [value]}]
-                 (defonce model (atom nil))
-                 (-> (swap! model (partial merge-with (fn [old new] (if (vector? old) (mapv merge old new) new))) value)
-                     (update :phasors (partial mapv #(dissoc % :group)))
-                     (dissoc :drawing :curve)))})
+  {:transform-fn (comp v/mark-presented (v/update-val (comp deref deref ::clerk/var-from-def)))
+   :render-fn    '(fn [val]
+                    (defonce model (atom nil))
+                    (v/html
+                     [v/inspect-paginated
+                      (-> (swap! model
+                                 (partial merge-with (fn [old new] (if (vector? old) (mapv merge old new) new)))
+                                 val)
+                          (update :phasors (partial mapv #(dissoc % :group)))
+                          (dissoc :drawing :curve))]))})
 
 ;; This is the model representing the constituents of our spirograph.
 ;; Three [phasors](https://en.wikipedia.org/wiki/Phasor), each one carrying an amplitude and an angular frequency.
 ^{::clerk/viewer client-model-sync}
-(defonce model
+(def model
   (atom {:phasors [{:amplitude 0.41 :frequency 0.46}
                    {:amplitude 0.46 :frequency -0.44}
                    {:amplitude 1.00 :frequency -0.45}]}))
@@ -132,27 +138,7 @@
 ;; arguments of the form `[value & path]` where the first entry is an integer in the range `0` to `100` while the tail is a valid path in
 ;; the model. We're actually ignoring the message address.
 ;;
-;; In order to receive OSC messages, we instantiate an OSC Server. We're overlaying an extra broadcast layer on top of the simple echo server
-;; provided by the [JavaOSC library](https://github.com/hoijui/JavaOSC). This will, in addition, allow to debug incoming messages in the terminal.
-;;
-;; Received events are tapped into the JVM for them to be handled with clojure functions, this piece shows Java interop at its best!
-(when-not (System/getenv "NOSC")
-  (defonce osc
-    (doto (proxy [ConsoleEchoServer]
-                 [(InetSocketAddress. "0.0.0.0" 6669)
-                  (LoggerFactory/getLogger ConsoleEchoServer)]
-            (start []
-              (proxy-super start)
-              (.. this
-                  getDispatcher
-                  (addListener (JavaRegexAddressMessageSelector. ".*")
-                               (reify
-                                 OSCMessageListener
-                                 (^void acceptMessage [_this ^OSCMessageEvent event]
-                                   (tap> (.getMessage event))))))))
-      .start)))
-
-;; Next, we need a function to convert OSC messages into normalized clojure data
+;; That said, here's a function to convert OSC messages into clojure data, normalized to rational points inside the unit interval
 (defn osc->map [^OSCMessage m]
   (let [[v & path] (map #(cond-> % (string? %) keyword) (.getArguments m))]
     {:value (if (= :phasors (first path)) (float (/ v 100)) v)
@@ -164,72 +150,122 @@
   (binding [*ns* (find-ns 'osc-spirograph)]
     (clerk/recompute!)))
 
-;; finally, a message handler to be added to tap callbacks
-(defn osc-message-handler [osc-message]
-  (let [{:keys [path value]} (osc->map osc-message)]
-    (update-model! #(assoc-in % path value))))
+;; Finally, in order to receive OSC messages, we instantiate an OSC Server. We're overlaying an extra broadcast layer on top of the simple echo server
+;; provided by the [JavaOSC library](https://github.com/hoijui/JavaOSC). This will, in addition, allow to debug incoming messages in the terminal.
+;; Well also sync back to the device every time we compute the notebook.
+(defonce osc-in
+  (proxy [ConsoleEchoServer]
+         [(InetSocketAddress. "0.0.0.0" 6669) (LoggerFactory/getLogger ConsoleEchoServer)]
+    (start []
+      (proxy-super start)
+      (.. this
+          getDispatcher
+          (addListener (JavaRegexAddressMessageSelector. ".*")
+                       (reify
+                         OSCMessageListener
+                         (^void acceptMessage [_this ^OSCMessageEvent event]
+                           (let [{:keys [path value]} (osc->map (.getMessage event))]
+                             (update-model! #(assoc-in % path value))))))))))
 
-;; Clerk won't cache forms returning nil values, hence the do here to ensure we register our handler just once when the notebook is evaluated
-(do
-  (add-tap osc-message-handler)
-  true)
+(defonce osc-out (OSCPortOut. (InetSocketAddress. "10.33.8.65" 7777)))
+
+(defn sync-osc [{:keys [phasors mode]}]
+  (.send osc-out
+         (OSCBundle.
+          (ArrayList.
+           (cond->> (sequence (comp (map-indexed (fn [idx {:keys [amplitude frequency]}]
+                                                   [(OSCMessage. (str "/phasors/" idx "/amplitude") (List/of (int (* 100 amplitude))))
+                                                    (OSCMessage. (str "/phasors/" idx "/frequency") (List/of (int (* 100 frequency))))])) cat)
+                              phasors)
+             (some? mode)
+             (cons (OSCMessage. "/mode" (List/of (int mode)))))))))
+
+(defonce ^::clerk/no-cache started
+  (when-not (System/getenv "NOSC")
+    (.start osc-in)
+    (sync-osc @model)))
 
 ;; And that's it I guess. Now, if you're looking at a static version of this notebook, you might want to clone [this repo](https://github.com/zampino/osc-spirograph), launch
 ;; Clerk with `(nextjournal.clerk/serve! {})` and see it in action with `(nextjournal.clerk/show! "notebooks/osc_spirograph.clj")`.
 ;;
-;; This project has been partly inspired by Jack Schaedler's interactive article ["SEEING CIRCLES, SINES, AND SIGNALS"](https://jackschaedler.github.io/circles-sines-signals/index.html)
-;; to which I refer the reader to explore the implications of Fourier analysis with digital signal processing.
+;; This project has been inspired by - let alone my curiosity for a nic(h)e protocol - Jack Schaedler's interactive article ["SEEING CIRCLES, SINES, AND SIGNALS"](https://jackschaedler.github.io/circles-sines-signals/index.html)
+;; to which I refer the reader to further explore the implications of Fourier analysis with digital signal processing.
+;; My article should definitely expand to also contain some sound, probably using overtone. Suggestions anyone? [@lo_zampino](https://twitter.com/lo_zampino)
 
 ^{::clerk/visibility :hide ::clerk/viewer :hide-result}
 (comment
-  (clerk/serve! {:port 7779})
+  (clerk/serve! {:port 7777})
   (clerk/clear-cache!)
 
-  (remove-tap osc-message-handler)
+  @model
+  (def local (OSCPortOut. (InetSocketAddress. "127.0.0.1" 6660)))
+  (.send local
+         (let [{:keys [phasors mode]} {:mode 0}]
+           (OSCBundle.
+            (ArrayList.
+             (cons (OSCMessage. "/mode" (List/of (int mode)))
+                   (some->> phasors
+                            (sequence (comp (map-indexed (fn [idx {:keys [amplitude frequency]}]
+                                                           [(OSCMessage. (str "/phasors/" idx "/amplitude") (List/of (int (* 100 amplitude))))
+                                                            (OSCMessage. (str "/phasors/" idx "/frequency") (List/of (int (* 100 frequency))))])) cat))))))))
 
-  (.start osc)
-  (.isListening osc)
-  (.stopListening osc)
+  (.start osc-in)
+  (.isListening osc-in)
+  (.stopListening osc-in)
 
-  (update-model (fn [m] (assoc-in m [:phasors 0 :amplitude] 2.0)))
-  (update-model (fn [m] (assoc-in m [:phasors 1 :frequency] 0.9)))
+  (update-model! (fn [m] (assoc-in m [:phasors 0 :amplitude] 0.9)))
+  (update-model! (fn [m] (assoc-in m [:phasors 1 :frequency] 0.1)))
 
   ;; save nice models
   @model
   (do
     (reset! model
-            #_
-            {:mode 0,
-                :phasors [{:amplitude 0.4, :frequency 0.2}
+            #_{:mode    0,
+               :phasors [{:amplitude 0.4, :frequency 0.2}
                          {:amplitude 1.0, :frequency -0.2}
-                         {:amplitude 0.4, :frequency 0.6}]}
-            #_ {:mode 0
-             :phasors [{:amplitude 0.41, :frequency 0.46}
-                       {:amplitude 0.71, :frequency -0.44}
-                       {:amplitude 0.6, :frequency -0.45}]}
 
-            #_ {:mode 0,
+                         {:amplitude 0.4, :frequency 0.6}]}
+            #_{:mode    0
+               :phasors [{:amplitude 0.41, :frequency 0.46}
+                         {:amplitude 0.71, :frequency -0.44}
+                         {:amplitude 0.6, :frequency -0.45}]}
+
+            #_{:mode    0,
+               :phasors [{:amplitude 0.35, :frequency -0.3}
+                         {:amplitude 0.83, :frequency 0.2}
+                         {:amplitude 1.0, :frequency 0.35}]}
+
+
+            {:mode    0,
              :phasors [{:amplitude 0.41, :frequency 0.46}
                        {:amplitude 0.46, :frequency -0.44}
                        {:amplitude 1.0, :frequency -0.45}]}
-            #_
-            {:mode 0
-             :phasors [{:amplitude 0.57, :frequency 0.39}
-                        {:amplitude 0.5, :frequency -0.27}
-                        {:amplitude 0.125, :frequency 0.27}]}
 
-            #_ {:mode 0,
-                :phasors [{:amplitude 0.72, :frequency -0.25}
-                         {:amplitude 0.59, :frequency 0.45}
-                         {:amplitude 0.52, :frequency 0.3}]}
+            #_{:mode    0
+               :phasors [{:amplitude 0.57, :frequency 0.39}
+                         {:amplitude 0.5, :frequency -0.27}
+                         {:amplitude 0.125, :frequency 0.27}]}
 
-            {:mode 0,
-             :phasors [{:amplitude 0.80, :frequency 0.55}
-                       {:amplitude 0.5, :frequency -0.27}
-                       {:amplitude 0.75, :frequency 0.27}]})
-    (clerk/recompute!))
+            #_{:phasors [{:amplitude 0.9, :frequency 0.06}
+                         {:amplitude 0.46, :frequency 0.1}
+                         {:amplitude 0.46, :frequency -0.45}]}
 
-  ;; clean
+            #_{:mode    0,
+               :phasors [{:amplitude 0.70, :frequency -0.25}
+                         {:amplitude 0.60, :frequency 0.45}
+                         {:amplitude 0.50, :frequency 0.25}]}
+
+            #_{:mode    0,
+               :phasors [{:amplitude 0.57, :frequency 0.33}
+                         {:amplitude 1.0, :frequency -0.35}
+                         {:amplitude 0.31, :frequency 0.14}]})
+    (swap! model assoc :clean? true)
+    (clerk/recompute!)
+    (swap! model assoc :clean? false)
+    (clerk/recompute!)
+    (sync-osc @model))
+
+  ;; just clean
   (do (swap! model assoc :clean? true)
       (clerk/recompute!)
       (swap! model assoc :clean? false)
