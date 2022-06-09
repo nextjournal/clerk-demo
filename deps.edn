@@ -1,5 +1,5 @@
 {:paths ["dev" "notebooks" "resources"]
- :deps {io.github.nextjournal/clerk {:mvn/version "0.8.445"}
+ :deps {io.github.nextjournal/clerk {:mvn/version "0.8.451"}
         io.github.nextjournal/clerk-slideshow {:git/sha "82b3b83ca456995250bdb99deceb5a24fdd75439"}
 
         ;; input various external data formats
