@@ -1,5 +1,5 @@
 ;; # A small data science example 🔢
-^{:nextjournal.clerk/visibility #{:hide-ns}}
+^{:nextjournal.clerk/visibility {:code :hide}}
 (ns data-science
   (:require [clojure.string :as str]
             [clojure.set :refer [join rename-keys project]]

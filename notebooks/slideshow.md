@@ -18,7 +18,7 @@ Simply require `clerk-slideshow`…
 …and add it to Clerk’s existing viewers:
 
 ```clojure
-  ^{::clerk/viewer clerk/hide-result}
+  ^{::clerk/visibility {:result :hide}}
   (clerk/add-viewers! [slideshow/viewer])
 ```
 

@@ -3,7 +3,7 @@
 ;; driven controller running on your phone to interact with vector graphic animations in a Clerk notebook. OSC is generally employed in live multimedia
 ;; devices and sound synthesizers, but as [remarked a while ago by Joe Armstrong](https://joearms.github.io/published/2016-01-28-A-Badass-Way-To-Connect-Programs-Together.html)
 ;; its properties make it an interesting choice for exchanging data across machines in a broader range of applications._
-^{:nextjournal.clerk/visibility :hide-ns}
+^{:nextjournal.clerk/visibility {:code :fold}}
 (ns osc-spirograph
   (:require [nextjournal.clerk :as clerk]
             [clojure.java.io :as io]
@@ -16,7 +16,7 @@
            (javax.imageio ImageIO)
            (java.util List ArrayList)))
 
-^{::clerk/visibility :fold :nextjournal.clerk/viewer :hide-result}
+^{::clerk/visibility {:code :hide :result :hide}}
 (def client-model-sync
   ;; This viewer is used to sync models between clojure values and those on the client side
   {:transform-fn (comp v/mark-presented (v/update-val (comp deref deref ::clerk/var-from-def)))
@@ -43,7 +43,7 @@
 ;; $$\zeta(t) = \sum_{k=1}^3 \mathsf{amplitude}_k\,\large{e}^{2\pi\,\mathsf{frequency}_k \,i\, t}$$
 ;;
 
-^{::clerk/visibility :fold ::clerk/viewer :hide-result}
+^{::clerk/visibility {:code :fold :result :hide}}
 (def spirograph-viewer
   {:render-fn '(fn [_]
                  (v/html
@@ -124,12 +124,12 @@
                                     (swap! model #(-> % (assoc :drawing drawing) build-phasors build-curve)))))]
                         [:div {:ref refn :style {:width "100%" :height "800px"}}]))]))})
 
-^{::clerk/width :full ::clerk/visibility :hide ::clerk/viewer spirograph-viewer}
+^{::clerk/width :full ::clerk/visibility {:code :hide} ::clerk/viewer spirograph-viewer}
 (Object.)
 
 ;; We'll be interacting with the spirograph by means of [TouchOSC](https://hexler.net/touchosc) an application for building OSC (or MIDI) driven interfaces runnable on smartphones and the like.
 ;; Our controller is looking like this:
-^{::clerk/visibility :hide}
+^{::clerk/visibility {:code :hide}}
 (ImageIO/read (io/resource "spirograph.png"))
 ;; the linear faders on the left will control the phasors amplitudes while the radial ones change their frequencies. This
 ;; specific layout is saved in [this file](https://github.com/zampino/osc-spirograph/blob/main/spirograph.tosc).
@@ -192,7 +192,7 @@
 ;; to which I refer the reader to further explore the implications of Fourier analysis with digital signal processing.
 ;; My article should definitely expand to also contain some sound, probably using overtone. Suggestions anyone? [@lo_zampino](https://twitter.com/lo_zampino)
 
-^{::clerk/visibility :hide ::clerk/viewer :hide-result}
+^{::clerk/visibility {:code :hide :result :hide}}
 (comment
   (clerk/serve! {:port 7777})
   (clerk/clear-cache!)

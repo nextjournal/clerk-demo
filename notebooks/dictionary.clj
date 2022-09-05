@@ -1,5 +1,5 @@
 ;; # 📔️ Regex Dictionary
-^{:nextjournal.clerk/visibility #{:hide-ns :hide}}
+^{:nextjournal.clerk/visibility {:code :hide :result :hide}}
 (ns dictionary
   (:require [clojure.string :as str]
             [clojure.java.io :as io]
@@ -7,14 +7,12 @@
             [nextjournal.clerk :as clerk]
             [controls :refer [text-input]]))
 
-^{:nextjournal.clerk/viewer :hide-result}
 (def dict
   (try
     (wordnet/make-dictionary "datasets/dict")
     (catch Exception e
       (throw (ex-info "You must download the WordNet database from https://wordnet.princeton.edu/download/current-version and expand it into the datasets/dict directory to run this demo." {})))))
 
-^{:nextjournal.clerk/viewer :hide-result}
 (def words
   (->> (if (.exists (io/file "/usr/share/dict/words"))
          "/usr/share/dict/words"
@@ -22,6 +20,8 @@
        slurp
        str/split-lines
        (filter #(seq (dict %)))))
+
+{::clerk/visibility {:result :show}}
 
 (clerk/html [:div [:span {:class "font-bold"} "Type three or more letters of a regex!"]])
 ^{:nextjournal.clerk/viewer text-input}

@@ -1,22 +1,22 @@
 ;; # 🕰️ GIT timeline for this project
-^{:nextjournal.clerk/visibility #{:hide-ns :hide}}
 (ns timeline
+  {:nextjournal.clerk/visibility {:code :hide :result :hide}}
   (:require [nextjournal.clerk :as clerk]
             [clj-jgit.porcelain :as cg]
             [clj-jgit.querying :as cgq]
             [clojure.set :as set]
             [nextjournal.clerk.viewer :as v]))
 
-^{:nextjournal.clerk/viewer :hide-result}
 (def clerk-repo
   (cg/load-repo ".git"))
 
-^{:nextjournal.clerk/viewer :hide-result}
 (def commits
   (->> (cg/git-log clerk-repo)
        (map (comp (partial cgq/commit-info clerk-repo) :id))
        reverse
        (into [])))
+
+{:nextjournal.clerk/visibility {:result :show}}
 
 (clerk/with-viewer
  {:transform-fn (comp v/mark-presented

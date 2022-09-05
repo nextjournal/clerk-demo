@@ -1,14 +1,13 @@
 ;; # 🎨 Making a Clerk Logo
-^{:nextjournal.clerk/visibility #{:hide-ns}}
+^{:nextjournal.clerk/visibility {:code :fold}}
 (ns logo
   (:require [nextjournal.clerk :as clerk]
             [clojure2d.core :as c2d]
             [fastmath.complex :as complex]
             [fastmath.vector :as v]))
 
-^{:nextjournal.clerk/visibility #{:hide}}
-(clerk/hide-result ; we need this because we don't want to open any windows
- (System/setProperty "java.awt.headless" "true"))
+^{:nextjournal.clerk/visibility {:code :hide :result :hide}}
+(System/setProperty "java.awt.headless" "true")
 
 ;; The new Clerk header image is made from a fifth order [Hilbert
 ;; Curve](https://en.wikipedia.org/wiki/Hilbert_curve), so we will

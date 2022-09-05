@@ -1,6 +1,6 @@
 ```clojure
-^{:nextjournal.clerk/visibility #{:hide :hide-ns}}
 (ns index
+  {:nextjournal.clerk/visibility {:code :hide}}
   (:require [clojure.string :as str]
             [nextjournal.clerk :as clerk]))
 ```

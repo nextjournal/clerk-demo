@@ -1,7 +1,8 @@
 ;; # Clojure Zippers with Scars à la Huet
 ;; _Building scars into clojure zipper library to go up and back down at the previous location._
-^{:nextjournal.clerk/visibility :hide-ns}
-(ns ^:nextjournal.clerk/no-cache zipper-with-scars
+(ns zipper-with-scars
+  {:nextjournal.clerk/visibility {:code :fold}
+   :nextjournal.clerk/no-cache true}
   (:require [clojure.zip :as zip]
             [arrowic.core :as a]
             [nextjournal.clerk :as clerk]
@@ -21,7 +22,7 @@
 ;; the [original zipper paper](http://gallium.inria.fr/~huet/PUBLIC/zip.pdf) has a memo-version of the up and down functions. Let's use Clerk viewers to illustrate how they work.
 ;;
 ;; Admittedly, the story with scars is just an excuse to test some animated zipper viewers in Clerk. To that end some machinery follows, unfold at your own peril.
-^{::clerk/visibility :fold ::clerk/viewer :hide-result}
+^{::clerk/visibility {:result :hide}}
 (do
   (defn loc-seq [zloc]
     ;; this sorts nodes so that children seqs are displayed in the correct order by arrowic
@@ -55,12 +56,12 @@
   (defn ->svg [{:as g :keys [vertices edges]}]
     (a/as-svg
      (a/with-graph (a/create-graph)
-                   (let [vmap (zipmap vertices (map (partial insert-vtx g) vertices))]
-                     (doseq [[v1 v2] edges]
-                       (a/insert-edge! (vmap v1) (vmap v2)
-                                       :end-arrow false :rounded true
-                                       :stroke-width "3"
-                                       :stroke-color "#7c3aed"))))))
+       (let [vmap (zipmap vertices (map (partial insert-vtx g) vertices))]
+         (doseq [[v1 v2] edges]
+           (a/insert-edge! (vmap v1) (vmap v2)
+                           :end-arrow false :rounded true
+                           :stroke-width "3"
+                           :stroke-color "#7c3aed"))))))
 
   (def zipper?
     (every-pred vector? (comp #{2} count) (comp map? first)
@@ -76,17 +77,17 @@
      :render-fn    '(fn [frames]
                       (v/html
                        (reagent/with-let
-                        [!reel? (reagent/atom false) !idx (reagent/atom 0) !tmr (reagent/atom nil)
-                         stepfn #(swap! !idx inc)]
-                        (cond
-                          (and @!reel? (not @!tmr))
-                          (reset! !tmr (js/setInterval stepfn 500))
-                          (and (not @!reel?) @!tmr)
-                          (do (js/clearInterval @!tmr) (reset! !tmr nil) (reset! !idx 0)))
-                        [:div.flex.items-left
-                         [:div.flex.mr-5 {:style {:font-size "1.5rem"}}
-                          [:div.cursor-pointer {:on-click #(swap! !reel? not)} ({true "⏹" false "▶️"} @!reel?)]]
-                         (v/inspect (frames (as-> (count frames) c (if @!reel? (mod @!idx c) (dec c)))))])))})
+                         [!reel? (reagent/atom false) !idx (reagent/atom 0) !tmr (reagent/atom nil)
+                          stepfn #(swap! !idx inc)]
+                         (cond
+                           (and @!reel? (not @!tmr))
+                           (reset! !tmr (js/setInterval stepfn 500))
+                           (and (not @!reel?) @!tmr)
+                           (do (js/clearInterval @!tmr) (reset! !tmr nil) (reset! !idx 0)))
+                         [:div.flex.items-left
+                          [:div.flex.mr-5 {:style {:font-size "1.5rem"}}
+                           [:div.cursor-pointer {:on-click #(swap! !reel? not)} ({true "⏹" false "▶️"} @!reel?)]]
+                          (v/inspect (frames (as-> (count frames) c (if @!reel? (mod @!idx c) (dec c)))))])))})
 
   (defn reset-reel [zloc] (vary-meta zloc assoc :frames [] :cut? false))
   (defn add-frame [zloc] (vary-meta zloc update :frames (fnil conj []) zloc))
@@ -95,10 +96,14 @@
     (list* '-> subj `reset-reel `add-frame
            (concat (interpose `add-frame ops) [`add-frame `cut])))
   (clerk/add-viewers! [zip-reel-viewer zip-location-viewer]))
-^{::clerk/viewer :hide-result}
+
+{::clerk/visibility {:code :show :result :hide}}
+
 (def ->zip (partial zip/zipper map? :content #(assoc %1 :content %2)))
-^{::clerk/viewer :hide-result}
+
 (defn ->node [name] {:name name})
+
+{::clerk/visibility {:result :show}}
 ;; In code cells below, you may read `zmov->` as clojure's own threading macro:
 ;; the resulting values are the same while metadata is being varied to contain intermediate "frames".
 (def tree
@@ -141,7 +146,7 @@
   Seqable
   (seq [_] (concat left (cons node right))))
 ;; and we're plugging it in the original up and down function definitions:
-^{::clerk/visibility :hide ::clerk/viewer :hide-result}
+^{::clerk/visibility {:code :hide :result :hide}}
 (.addMethod ^clojure.lang.MultiFn print-method Scar (get-method print-method clojure.lang.ISeq))
 
 (defn zip-up-memo [[node path :as loc]]
@@ -205,7 +210,7 @@
   zip/remove
   zip/remove)
 
-^{::clerk/viewer :hide-result ::clerk/visibility :hide}
+^{::clerk/visibility {:result :hide}}
 (comment
   (clerk/clear-cache!)
   (macroexpand '(zmov-> tree zip/up zip/down))
