@@ -7,9 +7,9 @@ start a Clojure project so you can have an editor connected REPL. If
 you're unsure or need help here, please reach out to us in
 `#workshop-clerk-moldable-development` on the StrangeLoop slack!
 
-Before we workshop we ask you to please:
+Before the workshop we ask you to please:
 
-1. Please join `#workshop-clerk-moldable-development` on the
+1. Join `#workshop-clerk-moldable-development` on the
    StrangeLoop slack
 2. Git clone https://github.com/nextjournal/clerk-demo
 3. Make sure you can run it and evaluate forms in `user.clj`
