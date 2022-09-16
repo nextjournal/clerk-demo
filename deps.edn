@@ -1,6 +1,7 @@
-{:paths ["dev" "notebooks" "resources"]
+{:paths ["dev" "notebooks" "resources" "workshop"]
  :deps {io.github.nextjournal/clerk {:mvn/version "0.10.560"}
         io.github.nextjournal/clerk-slideshow {:git/sha "82b3b83ca456995250bdb99deceb5a24fdd75439"}
+        org.clojure/clojure {:mvn/version "1.11.1"}
 
         ;; input various external data formats
         com.github.seancorfield/next.jdbc {:mvn/version "1.2.659"}

@@ -6,7 +6,7 @@
 
 ;; To select a viewer, you can use functions or metadata. In what
 ;; situations would you reach for which one? Explore the differences
-;; also at the REPL.
+;; at the REPL.
 
 ;; ## Explicit Function
 
