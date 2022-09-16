@@ -1,13 +1,15 @@
 ;; # A small data science example 🔢
 ^{:nextjournal.clerk/visibility {:code :hide}}
 (ns data-science
-  (:require [clojure.string :as str]
-            [clojure.set :refer [join rename-keys project]]
+  (:require [clojure.set :refer [join rename-keys project]]
+            [clojure.string :as str]
+            [dk.ative.docjure.spreadsheet :as ss]
+            [kixi.stats.core :as kixi-stats]
+            [kixi.stats.protocols :as kixi-p]
             [meta-csv.core :as csv]
-            [next.jdbc.sql :as sql]
             [next.jdbc :as jdbc]
             [next.jdbc.result-set :as rs]
-            [dk.ative.docjure.spreadsheet :as ss]
+            [next.jdbc.sql :as sql]
             [nextjournal.clerk :as clerk]))
 
 ;; # Exploring the world in data
@@ -179,21 +181,40 @@
 
 (clerk/table world-happiness)
 
+;; Next, we're computing a linear regression for this dataset using [kixi.stats](https://github.com/MastodonC/kixi.stats).
+^{::clerk/viewer kixi-p/parameters}
+(def linear-regression
+  (transduce identity (kixi-stats/simple-linear-regression :score :gdp) world-happiness))
+
+;; We'll use this linear regression to augment out dataset so each datapoint also gets a `:regression` value.
+(def world-happiness+regression
+  (mapv (fn [{:as datapoint :keys [score]}]
+          (assoc datapoint :regression (kixi-p/measure linear-regression score)))
+        world-happiness))
+
 ;; Let's graph the relationship between happiness and GDP to get a
 ;; bird's eye view on the situation over our entire dataset. You can
 ;; mouse over individual data points to get more info:
 
+^{:nextjournal.clerk/visibility {:code :hide :result :show}}
 (clerk/vl
- {:data {:values world-happiness}
+ {:data {:values world-happiness+regression}
   :width 700
   :height 500
-  :mark {:type "point"
-         :tooltip {:field :country}}
-  :encoding {:x {:field :score
-                 :type :quantitative
-                 :scale {:zero false}}
-             :y {:field :gdp
-                 :type :quantitative}}})
+  :layer [{:mark {:type "point"
+                  :tooltip {:field :country}}
+           :encoding {:x {:field :score
+                          :type :quantitative
+                          :scale {:zero false}}
+                      :y {:field :gdp
+                          :type :quantitative}}}
+          {:mark {:type "line" :color "#ccc"}
+           :encoding {:x {:field :score
+                          :type :quantitative
+                          :scale {:zero false}}
+                      :y {:field :regression
+                          :type :quantitative}}}]})
+
 
 ;; It looks, as we might have expected, like richer countries are
 ;; happier than poor ones in general, though with variations and
