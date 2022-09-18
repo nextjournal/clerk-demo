@@ -1,6 +1,13 @@
-# Clerk Examples and Demos
+# Clerk StrangeLoop Workshop
 
-This is a preview of Clerk before its open source release. See the
-[Clerk README](https://nextjournal.com/mk/clerk-preview) for more information.
+If you already have the clerk-demo repo cloned, add a remote and check
+out the workshop branch:
 
-To play with this, eval forms in [dev/user.clj](dev/user.clj).
+```sh
+cd clerk-demo
+git remote add workshop git@github.com:mk/clerk-workshop.git
+git fetch workshop
+git co workshop
+```
+
+Alternatively, clone this repo using the instructions on GitHub.
