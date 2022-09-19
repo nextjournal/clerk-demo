@@ -5,10 +5,10 @@
   (:require [nextjournal.clerk :as clerk]))
 
 ;; ### Supported Formats
-;; What are the different formats that the Clerk table viewer supports?
+;; What are the different formats that the Clerk table viewer supports? Write a small example using each of them. Also use `clerk/use-headers`.
 
 ;; ### Column Ordering
-;; Which of the formats above supports explicit column ordering?
+;; Which of the formats above supports explicit column ordering? Write a small example for each one.
 
 ;; ### Composing Viewers
 
@@ -51,3 +51,4 @@
    "2003" (map format-percent [12.2 11.3 9.4 9.4 2.4])
    "3 years" (map format-percent [-11.7 -12.9 -3.9 0.8 9.4])
    "5 years" (map format-percent [-0.8 -0.2 4.0 3.0 7.6])})
+
