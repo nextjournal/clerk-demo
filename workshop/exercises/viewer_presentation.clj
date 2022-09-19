@@ -1,6 +1,6 @@
 ;; # Viewer Presentation
 
-(ns exercises.presentation
+(ns exercises.viewer-presentation
   (:require [nextjournal.clerk :as clerk]
             [nextjournal.clerk.viewer :as viewer]))
 
