@@ -1,6 +1,6 @@
 ;; # Table Viewer
 
-(ns exercises.table-viewer
+(ns exercises.ex-2-table-viewer
   {::clerk/visibility {:code :fold}}
   (:require [nextjournal.clerk :as clerk]))
 

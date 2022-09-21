@@ -1,5 +1,5 @@
 ;; # Caching
-(ns caching
+(ns exercises.ex-6-caching
   (:require [nextjournal.clerk :as clerk]))
 
 ;; Note how the following notebook will show the same value

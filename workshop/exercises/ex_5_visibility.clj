@@ -1,4 +1,4 @@
-(ns exercises.visibility
+(ns exercises.ex-5-visibility
   (:require [clojure.string :as str]
             [meta-csv.core :as csv]
             [nextjournal.clerk :as clerk]))
@@ -19,7 +19,6 @@ This notebook has a bit of setup code. Use Clerk's visibility settings to fully 
                          :life-expectancy (read-string (get % "Life expectancy"))))))
 
 #_ "TODO: hide the setup code above"
-
 
 ;; ## Life expectancy
 

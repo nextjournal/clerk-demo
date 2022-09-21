@@ -1,6 +1,6 @@
 ;; # Viewer Require
 
-(ns viewer-require
+(ns exercises.ex-4-viewer-require
   (:require [nextjournal.clerk :as clerk]))
 
 ;; Complete the following viewer to dynamically require the `emoji-js`
