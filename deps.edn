@@ -1,6 +1,6 @@
 {:paths ["dev" "notebooks" "resources" "workshop"]
  :deps {io.github.nextjournal/clerk {:mvn/version "0.10.562"}
-        io.github.nextjournal/clerk-slideshow {:git/sha "82b3b83ca456995250bdb99deceb5a24fdd75439"}
+        io.github.nextjournal/clerk-slideshow {:git/sha "ea9b27e5ec2e5ad57e889060521451ed9138325b"}
         org.clojure/clojure {:mvn/version "1.11.1"}
 
         ;; input various external data formats

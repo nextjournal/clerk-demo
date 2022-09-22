@@ -10,16 +10,16 @@ using Clerk notebooks.
 Simply require `clerk-slideshow`…
 
 ```clojure
-  (ns simple-slideshow
-    (:require [nextjournal.clerk :as clerk]
-      [nextjournal.clerk-slideshow :as slideshow]))
+(ns simple-slideshow
+  (:require [nextjournal.clerk :as clerk]
+            [nextjournal.clerk-slideshow :as slideshow]))
 ```
 
 …and add it to Clerk’s existing viewers:
 
 ```clojure
-  ^{::clerk/visibility {:result :hide}}
-  (clerk/add-viewers! [slideshow/viewer])
+^{::clerk/visibility {:result :hide}}
+(clerk/add-viewers! [slideshow/viewer])
 ```
 
 ---
@@ -40,8 +40,8 @@ Now some demos 👉
 ## 📊 A Plotly graph
 
 ```clojure
-  ^{::clerk/visibility :hide}
-  (clerk/plotly {:data [{:z [[1 2 3] [3 2 1]] :type "surface"}]})
+^{::clerk/visibility {:code :hide}}
+(clerk/plotly {:data [{:z [[1 2 3] [3 2 1]] :type "surface"}]})
 ```
 
 ---
@@ -49,7 +49,7 @@ Now some demos 👉
 ## 📈 A Vega Lite graph
 
 ```clojure
-  ^{::clerk/visibility :hide}
+^{::clerk/visibility {:code :hide}}
 (clerk/vl {:width 650 :height 400 :data {:url "https://vega.github.io/vega-datasets/data/us-10m.json"
                                          :format {:type "topojson" :feature "counties"}}
            :transform [{:lookup "id" :from {:data {:url "https://vega.github.io/vega-datasets/data/unemployment.tsv"}

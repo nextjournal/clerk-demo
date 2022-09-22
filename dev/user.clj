@@ -3,10 +3,10 @@
 
 (comment
   ;; start without file watcher, open browser when started
-  (clerk/serve! {:browse? true})
+  (clerk/serve! {:browse? true :port 6677})
 
   ;; start with file watcher for these sub-directory paths
-  (clerk/serve! {:watch-paths ["notebooks" "src" "index.md"]})
+  (clerk/serve! {:watch-paths ["notebooks" "src"]})
 
   ;; start with file watcher and a `show-filter-fn` function to watch
   ;; a subset of notebooks
