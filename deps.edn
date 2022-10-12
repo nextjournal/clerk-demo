@@ -1,5 +1,5 @@
 {:paths ["dev" "notebooks" "resources"]
- :deps {io.github.nextjournal/clerk {:mvn/version "0.10.562"}
+ :deps {io.github.nextjournal/clerk {:git/sha "8be087166ef4308c6bfb4adafb5a0c68cd2200a0"}
         io.github.nextjournal/clerk-slideshow {:git/sha "ea9b27e5ec2e5ad57e889060521451ed9138325b"}
 
         ;; input various external data formats
@@ -25,21 +25,21 @@
         clojure2d/clojure2d                {:mvn/version "1.4.4"}
 
         ;; OSC server
-        com.illposed.osc/javaosc-core      {:mvn/version "0.8"}}
+        com.illposed.osc/javaosc-core      {:mvn/version "0.8"}
 
- :aliases
- {:nextjournal/clerk
-  {:extra-paths ["datasets"]
-   :exec-fn nextjournal.clerk/build-static-app!
-   ;; notebooks to be built, accepts globs patterns
-   :exec-args {:bundle? false
-               :git/url "https://github.com/nextjournal/clerk-demo"
-               :paths ["index.md"
-                       "notebooks/slideshow.md"
-                       "notebooks/introduction.clj"
-                       "notebooks/data_science.clj"
-                       "notebooks/images.clj"
-                       "notebooks/semantic.clj"
-                       "notebooks/sicmutils.clj"
-                       "notebooks/rule_30.clj"
-                       "notebooks/zipper_with_scars.clj"]}}}}
+        org.babashka/cli {:mvn/version "0.5.40"}}
+
+ :aliases {:nextjournal/clerk {:extra-paths ["datasets"]
+                               :exec-fn nextjournal.clerk/build!
+                               ;; notebooks to be built, accepts globs patterns
+                               :exec-args {:git/url "https://github.com/nextjournal/clerk-demo"
+                                           :paths ["index.md"
+                                                   "notebooks/slideshow.md"
+                                                   "notebooks/introduction.clj"
+                                                   "notebooks/data_science.clj"
+                                                   "notebooks/images.clj"
+                                                   "notebooks/semantic.clj"
+                                                   "notebooks/sicmutils.clj"
+                                                   "notebooks/rule_30.clj"
+                                                   "notebooks/zipper_with_scars.clj"]}
+                               :main-opts ["-m" "babashka.cli.exec"]}}}
