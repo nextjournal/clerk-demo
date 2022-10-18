@@ -13,7 +13,7 @@ clj -M:nextjournal/clerk nextjournal.clerk/serve! --watch-paths notebooks --port
 
 This will start the Clerk webserver on port 7777 and watch the
 `notebooks/` directory for changes and open Clerk in your
-browser. 
+browser.
 
 Open one of the files there, e.g. `rule_30.clj`, make a
 change and save it. You should then see these changes reflected in the

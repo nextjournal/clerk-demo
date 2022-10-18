@@ -1,9 +1,13 @@
-{:paths ["dev" "notebooks" "resources"]
- :deps {io.github.nextjournal/clerk {:git/sha "56bb0fa5e4f21d70f3ac763dc13ad1ab28164d8d"}
+{:paths ["dev" "notebooks" "resources" "workshop"]
+ :deps {io.github.nextjournal/clerk {:local/root "../clerk"
+                                     #_#_
+                                     :git/sha "56bb0fa5e4f21d70f3ac763dc13ad1ab28164d8d"}
         io.github.nextjournal/clerk-slideshow {:git/sha "f9fb86430ebf533bfc9d5cec5bf0a94ed07146f3"}
 
-        ;; keep 1.10 until `kixi/stats` and `sicmutils` fix warnings
-        org.clojure/clojure {:mvn/version "1.10.3"}
+        org.clojure/clojure {:mvn/version "1.12.0-alpha2"}
+
+        applied-science/edn-datasets {:git/url "git@github.com:applied-science/edn-datasets.git"
+                                      :sha "da3aa56886d4027d7ef6b3f91083e1833d3a4f93"}
 
         ;; input various external data formats
         com.github.seancorfield/next.jdbc {:mvn/version "1.2.659"}
