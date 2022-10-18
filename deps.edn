@@ -1,9 +1,8 @@
-{:paths ["dev" "notebooks" "resources"]
+{:paths ["dev" "notebooks" "resources" "workshop"]
  :deps {io.github.nextjournal/clerk {:mvn/version "0.12.707"}
         io.github.nextjournal/clerk-slideshow {:git/sha "562f634494a1e1a9149ed78d5d39fd9486cc00ba"}
 
-        ;; keep 1.10 until `kixi/stats` and `sicmutils` fix warnings
-        org.clojure/clojure {:mvn/version "1.10.3"}
+        org.clojure/clojure {:mvn/version "1.11.1"}
 
         ;; input various external data formats
         com.github.seancorfield/next.jdbc {:mvn/version "1.2.659"}
