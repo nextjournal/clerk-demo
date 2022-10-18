@@ -1,6 +1,28 @@
-# Clerk Examples and Demos
+# 🤹 Clerk Demo
 
-This is a preview of Clerk before its open source release. See the
-[Clerk README](https://nextjournal.com/mk/clerk-preview) for more information.
+This is a bucket of interesting of Clerk Demos.
 
-To play with this, eval forms in [dev/user.clj](dev/user.clj).
+## Usage
+
+To play with this, you need to have [Clojure
+installed](https://clojure.org/guides/install_clojure), then run:
+
+``` shell
+clj -M:nextjournal/clerk nextjournal.clerk/serve! --paths notebooks --port 7777 --browse
+```
+
+This will start the Clerk webserver on port 7777 and watch the
+`notebooks/` directory for changes and open Clerk in your
+browser. 
+
+Open one of the files there, e.g. `rule_30.clj`, make a
+change and save it. You should then see these changes reflected in the
+browser.
+
+## From your Editor
+
+For interactive development, it is recommended you let your editor
+start the project (`jack-in`), if asked you should select `deps.edn` as
+the project type.
+
+Then, evaluate forms in `dev/user.clj`.

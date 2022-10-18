@@ -1,5 +1,5 @@
 {:paths ["dev" "notebooks" "resources"]
- :deps {io.github.nextjournal/clerk {:mvn/version "0.11.603"}
+ :deps {io.github.nextjournal/clerk {:git/sha "fa0ddcf000bbcd211008c93d8bd0b3047629f6b6"}
         io.github.nextjournal/clerk-slideshow {:git/sha "ea9b27e5ec2e5ad57e889060521451ed9138325b"}
 
         ;; keep 1.10 until `kixi/stats` and `sicmutils` fix warnings
@@ -11,7 +11,7 @@
         org.xerial/sqlite-jdbc {:mvn/version "3.34.0"}
         dk.ative/docjure {:mvn/version "1.16.0"}
         clojusc/wordnet {:mvn/version "1.2.0"}
-        clj-jgit/clj-jgit {:mvn/version "1.0.2"}
+        clj-jgit/clj-jgit {:mvn/version "1.0.2" :exclusions [org.slf4j/slf4j-api]}
 
         ;; some statistical routines
         kixi/stats {:mvn/version "0.5.4"}
@@ -20,17 +20,17 @@
         sicmutils/sicmutils {:mvn/version "0.22.0"}
 
         ;; semantic web goodies and box/arrow graphs
-        jackrusher/mundaneum {:git/url "https://github.com/jackrusher/mundaneum/"
-                              :git/sha "d2c934a12388d88ddb3e53fef92ec2eef97d6140"}
+        io.github.jackrusher/mundaneum {:git/sha "d2c934a12388d88ddb3e53fef92ec2eef97d6140"}
         arrowic/arrowic {:mvn/version "0.1.1"}
 
-        ;; 2D drawing routines
-        clojure2d/clojure2d                {:mvn/version "1.4.4"}
-
+        
         ;; OSC server
-        com.illposed.osc/javaosc-core      {:mvn/version "0.8"}
+        com.illposed.osc/javaosc-core      {:mvn/version "0.8" :exclusions [org.slf4j/slf4j-api org.slf4j/slf4j-log4j12]}
 
-        org.babashka/cli {:mvn/version "0.5.40"}}
+        org.babashka/cli {:mvn/version "0.5.40"}
+
+        ;; silence log warnings
+        org.slf4j/slf4j-nop {:mvn/version "1.7.36"}}
 
  :aliases {:nextjournal/clerk {:extra-paths ["datasets"]
                                :exec-fn nextjournal.clerk/build!
@@ -45,4 +45,5 @@
                                                    "notebooks/sicmutils.clj"
                                                    "notebooks/rule_30.clj"
                                                    "notebooks/zipper_with_scars.clj"]}
-                               :main-opts ["-m" "babashka.cli.exec"]}}}
+                               :main-opts ["-m" "babashka.cli.exec"]}
+           :clojure2d {:extra-deps {clojure2d/clojure2d {:mvn/version "1.4.4"}}}}}

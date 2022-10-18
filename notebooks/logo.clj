@@ -1,6 +1,9 @@
 ;; # 🎨 Making a Clerk Logo
 ^{:nextjournal.clerk/visibility {:code :fold}}
 (ns logo
+  "A notebook generating the Clerk's logo.
+
+  Note that to run this, the  `:clojure2d` needs to be added."
   (:require [nextjournal.clerk :as clerk]
             [clojure2d.core :as c2d]
             [fastmath.complex :as complex]
