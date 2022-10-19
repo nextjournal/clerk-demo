@@ -8,7 +8,7 @@ To play with this, you need to have [Clojure
 installed](https://clojure.org/guides/install_clojure), then run:
 
 ``` shell
-clj -M:nextjournal/clerk nextjournal.clerk/serve! --paths notebooks --port 7777 --browse
+clj -M:nextjournal/clerk nextjournal.clerk/serve! --watch-paths notebooks --port 7777 --browse
 ```
 
 This will start the Clerk webserver on port 7777 and watch the
