@@ -41,6 +41,7 @@
                                                    "notebooks/introduction.clj"
                                                    "notebooks/data_science.clj"
                                                    "notebooks/images.clj"
+                                                   "notebooks/logo.clj"
                                                    "notebooks/semantic.clj"
                                                    "notebooks/sicmutils.clj"
                                                    "notebooks/rule_30.clj"
