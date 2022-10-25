@@ -1,6 +1,6 @@
 # 🤹 Clerk Demo
 
-This is a bucket of interesting of Clerk Demos.
+This is a bucket of interesting Clerk demos. See https://github.clerk.garden/nextjournal/clerk-demo.
 
 ## Usage
 
