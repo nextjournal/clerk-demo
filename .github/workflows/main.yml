@@ -35,7 +35,7 @@ jobs:
           key: ${{ runner.os }}-clerk
 
       - name: 🏗 Clerk Build
-        run: clojure -X:nextjournal/clerk :path-prefix '"clerk-demo/build/${{ github.sha }}/"' :git/sha '"${{ github.sha }}"'
+        run: clojure -X:clojure2d:nextjournal/clerk :path-prefix '"clerk-demo/build/${{ github.sha }}/"' :git/sha '"${{ github.sha }}"'
 
       - name: 🔐 Google Auth
         uses: google-github-actions/auth@v0
