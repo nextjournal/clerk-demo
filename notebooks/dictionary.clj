@@ -1,11 +1,10 @@
 ;; # 📔️ Regex Dictionary
-^{:nextjournal.clerk/visibility {:code :hide :result :hide}}
 (ns dictionary
+  {:nextjournal.clerk/visibility {:code :hide :result :hide}}
   (:require [clojure.string :as str]
             [clojure.java.io :as io]
             [wordnet.core :as wordnet]
-            [nextjournal.clerk :as clerk]
-            [controls :refer [text-input]]))
+            [nextjournal.clerk :as clerk]))
 
 (def dict
   (try
@@ -21,11 +20,27 @@
        str/split-lines
        (filter #(seq (dict %)))))
 
+^::clerk/sync
+(defonce text-state
+  (atom ""))
+
+#_(reset! text-state "")
+
 {::clerk/visibility {:result :show}}
+
+(def text-input
+  {:transform-fn clerk/mark-presented
+   :render-fn '(fn [var-name]
+                 (let [text-state @(resolve var-name)]
+                   [:input {:type :text
+                            :placeholder "⌨️"
+                            :value @text-state
+                            :class "px-3 py-3 placeholder-blueGray-300 text-blueGray-600 relative bg-white bg-white rounded text-sm border border-blueGray-300 outline-none focus:outline-none focus:ring w-full"
+                            :on-input #(swap! text-state (constantly (.. % -target -value)))}]))})
 
 (clerk/html [:div [:span {:class "font-bold"} "Type three or more letters of a regex!"]])
 ^{:nextjournal.clerk/viewer text-input}
-(defonce text-state (atom ""))
+`text-state
 
 ^::clerk/no-cache
 (clerk/html
