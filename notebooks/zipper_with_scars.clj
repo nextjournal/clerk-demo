@@ -72,23 +72,21 @@
      :pred zipper?})
 
   (def zip-reel-viewer
-    {:pred         (every-pred zipper? (comp :cut? meta))
-     :transform-fn (comp :frames meta v/->value)
-     :render-fn    '(fn [frames]
-                      (v/html
-                       (reagent/with-let
-                         [!reel? (reagent/atom false) !idx (reagent/atom 0) !tmr (reagent/atom nil)
-                          stepfn #(swap! !idx inc)]
-                         (cond
-                           (and @!reel? (not @!tmr))
-                           (reset! !tmr (js/setInterval stepfn 500))
-                           (and (not @!reel?) @!tmr)
-                           (do (js/clearInterval @!tmr) (reset! !tmr nil) (reset! !idx 0)))
-                         [:div.flex.items-left
-                          [:div.flex.mr-5 {:style {:font-size "1.5rem"}}
-                           [:div.cursor-pointer {:on-click #(swap! !reel? not)} ({true "⏹" false "▶️"} @!reel?)]]
-                          (v/inspect (frames (as-> (count frames) c (if @!reel? (mod @!idx c) (dec c)))))])))})
-
+    {:pred (every-pred zipper? (comp :cut? meta))
+     :transform-fn (comp v/mark-presented (v/update-val (comp #(mapv (comp ->svg ->graph) %) :frames meta)))
+     :render-fn '(fn [frames]
+                   (let [!state (nextjournal.clerk.render.hooks/use-state {:reel? false :idx 0 :tmr nil})
+                         frame-count (count frames)]
+                     (let [{:keys [reel? idx tmr]} @!state]
+                       (cond
+                         (and reel? (not tmr))
+                         (swap! !state assoc :tmr (js/setInterval (fn [_] (swap! !state update :idx (comp #(mod % frame-count) inc))) 500))
+                         (and (not reel?) tmr)
+                         (do (js/clearInterval tmr) (swap! !state assoc :tmr nil :idx 0)))
+                       [:div.flex.items-left
+                        [:div.flex.mr-5 {:style {:font-size "1.5rem"}}
+                         [:div.cursor-pointer {:on-click #(swap! !state update :reel? not)} ({true "⏹" false "▶️"} reel?)]]
+                        [v/html (frames (if reel? idx (dec frame-count)))]])))})
   (defn reset-reel [zloc] (vary-meta zloc assoc :frames [] :cut? false))
   (defn add-frame [zloc] (vary-meta zloc update :frames (fnil conj []) zloc))
   (defn cut [zloc] (vary-meta zloc assoc :cut? true))
@@ -107,8 +105,7 @@
 ;; In code cells below, you may read `zmov->` as clojure's own threading macro:
 ;; the resulting values are the same while metadata is being varied to contain intermediate "frames".
 (def tree
-  (zmov-> (->node 'a)
-    ->zip
+  (zmov-> (->zip (->node 'a))
     (zip/append-child (->node 'b))
     (zip/append-child (->node 'c))
     zip/down zip/right
