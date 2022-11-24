@@ -1,5 +1,5 @@
 {:paths ["dev" "notebooks" "resources"]
- :deps {io.github.nextjournal/clerk {:git/sha "f08a9b03dbe06c25584173e63b49e24f708d3934"
+ :deps {io.github.nextjournal/clerk {:git/sha "abda6b13e84eadf5412970762473b2729fc3ac99"
                                      #_#_:local/root "../clerk"}
         io.github.nextjournal/clerk-slideshow {:git/sha "562f634494a1e1a9149ed78d5d39fd9486cc00ba"}
 
