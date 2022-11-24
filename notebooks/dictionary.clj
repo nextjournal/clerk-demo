@@ -4,7 +4,8 @@
   (:require [clojure.string :as str]
             [clojure.java.io :as io]
             [wordnet.core :as wordnet]
-            [nextjournal.clerk :as clerk]))
+            [nextjournal.clerk :as clerk]
+            [nextjournal.clerk.viewer :as v]))
 
 (def dict
   (try
@@ -29,14 +30,12 @@
 {::clerk/visibility {:result :show}}
 
 (def text-input
-  {:transform-fn clerk/mark-presented
-   :render-fn '(fn [var-name]
-                 (let [text-state @(resolve var-name)]
-                   [:input {:type :text
-                            :placeholder "⌨️"
-                            :value @text-state
-                            :class "px-3 py-3 placeholder-blueGray-300 text-blueGray-600 relative bg-white bg-white rounded text-sm border border-blueGray-300 outline-none focus:outline-none focus:ring w-full"
-                            :on-input #(swap! text-state (constantly (.. % -target -value)))}]))})
+  (assoc v/viewer-eval-viewer
+         :render-fn
+         '(fn [text-state]
+            [:input {:type :text :placeholder "⌨️" :value @text-state
+                     :class "px-3 py-3 placeholder-blueGray-300 text-blueGray-600 relative bg-white bg-white rounded text-sm border border-blueGray-300 outline-none focus:outline-none focus:ring w-full"
+                     :on-input #(swap! text-state (constantly (.. % -target -value)))}])))
 
 (clerk/html [:div [:span {:class "font-bold"} "Type three or more letters of a regex!"]])
 ^{:nextjournal.clerk/viewer text-input}
