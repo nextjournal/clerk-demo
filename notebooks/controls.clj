@@ -16,9 +16,9 @@
                        (clerk/update-val (fn [{::clerk/keys [var-from-def]}]
                                            {:var-name (symbol var-from-def) :value @@var-from-def})))
    :render-fn '(fn [{:keys [var-name value]}]
-                 (v/html [:input {:type :range
-                                  :initial-value value
-                                  :on-change #(v/clerk-eval `(reset! ~var-name (Integer/parseInt ~(.. % -target -value))))}]))})
+                 [:input {:type :range
+                          :initial-value value
+                          :on-change #(v/clerk-eval `(reset! ~var-name (Integer/parseInt ~(.. % -target -value))))}])})
 
 ;; And then assign is to a particular atom like this:
 ^{::clerk/viewer slider}
@@ -68,11 +68,11 @@
    ;; front- and back- ends of the system is extremely
    ;; powerful — thanks, Lisp!
    :render-fn '(fn [{:keys [var-name value]}]
-                 (v/html [:input {:type :text
-                                  :placeholder "⌨️"
-                                  :initial-value value
-                                  :class "px-3 py-3 placeholder-blueGray-300 text-blueGray-600 relative bg-white bg-white rounded text-sm border border-blueGray-300 outline-none focus:outline-none focus:ring w-full"
-                                  :on-input #(v/clerk-eval `(reset! ~var-name ~(.. % -target -value)))}]))})
+                 [:input {:type :text
+                          :placeholder "⌨️"
+                          :initial-value value
+                          :class "px-3 py-3 placeholder-blueGray-300 text-blueGray-600 relative bg-white bg-white rounded text-sm border border-blueGray-300 outline-none focus:outline-none focus:ring w-full"
+                          :on-input #(v/clerk-eval `(reset! ~var-name ~(.. % -target -value)))}])})
 
 ^{::clerk/viewer text-input}
 (defonce text-state (atom ""))

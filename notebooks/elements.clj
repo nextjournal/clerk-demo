@@ -24,7 +24,7 @@
                                             "bg-black")
                                    :style {:width 16 :height 16}}))
              row (fn [r] (into [:div.flex.inline-flex] (map cell) r))]
-         (v/html (into [:div.flex.flex-col] (map row) board))))
+         (into [:div.flex.flex-col] (map row) board)))
     (->> g1 (iterate evolve) (take 17))))
 
 ;; Clerk uses static analysis and a tiny bit of data flow to avoid needless recomputation.
