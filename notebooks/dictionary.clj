@@ -21,28 +21,24 @@
        str/split-lines
        (filter #(seq (dict %)))))
 
-^::clerk/sync
-(defonce text-state
-  (atom ""))
-
-#_(reset! text-state "")
-
 (def text-input
   (assoc v/viewer-eval-viewer
          :render-fn
          '(fn [text-state]
             [:input {:type :text :placeholder "⌨️" :value @text-state
                      :class "px-3 py-3 placeholder-blueGray-300 text-blueGray-600 relative bg-white bg-white rounded text-sm border border-blueGray-300 outline-none focus:outline-none focus:ring w-full"
-                     :on-input #(swap! text-state (constantly (.. % -target -value)))}])))
+                     :on-input #(reset! text-state (.. % -target -value))}])))
+
+(comment
+  @text-state)
 
 {::clerk/visibility {:result :show}}
 
+^{::clerk/sync true ::clerk/viewer text-input}
+(defonce text-state (atom ""))
+
 (clerk/html [:div [:span {:class "font-bold"} "Type three or more letters of a regex!"]])
 
-^{:nextjournal.clerk/viewer text-input}
-`text-state
-
-^::clerk/no-cache
 (clerk/html
  (let [pat (re-pattern @text-state)
        filtered-words (if (> 3 (count @text-state)) []
