@@ -20,12 +20,12 @@
 
 (clerk/add-viewers!
  [{:pred number?
-   :render-fn '#(v/html [:div.inline-block {:style {:width 16 :height 16}
-                                            :class (if (pos? %) "bg-black" "bg-white border-solid border-2 border-black")}])}
+   :render-fn '(fn [n] [:div.inline-block {:style {:width 16 :height 16}
+                                           :class (if (pos? n) "bg-black" "bg-white border-solid border-2 border-black")}])}
   {:pred (every-pred list? (partial every? (some-fn number? vector?)))
-   :render-fn '#(v/html (into [:div.flex.flex-col] (v/inspect-children %2) %1))}
+   :render-fn '(fn [rows opts] (into [:div.flex.flex-col] (v/inspect-children opts) rows))}
   {:pred (every-pred vector? (complement map-entry?) (partial every? number?))
-   :render-fn '#(v/html (into [:div.flex.inline-flex] (v/inspect-children %2) %1))}])
+   :render-fn '(fn [row opts] (into [:div.flex.inline-flex] (v/inspect-children opts) row))}])
 
 ;; Now let's test each one to make sure they look the way we want:
 

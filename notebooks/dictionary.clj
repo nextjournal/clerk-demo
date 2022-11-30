@@ -1,11 +1,11 @@
 ;; # 📔️ Regex Dictionary
-^{:nextjournal.clerk/visibility {:code :hide :result :hide}}
 (ns dictionary
+  {:nextjournal.clerk/visibility {:code :hide :result :hide}}
   (:require [clojure.string :as str]
             [clojure.java.io :as io]
             [wordnet.core :as wordnet]
             [nextjournal.clerk :as clerk]
-            [controls :refer [text-input]]))
+            [nextjournal.clerk.viewer :as v]))
 
 (def dict
   (try
@@ -21,13 +21,24 @@
        str/split-lines
        (filter #(seq (dict %)))))
 
+(def text-input
+  (assoc v/viewer-eval-viewer
+         :render-fn
+         '(fn [text-state]
+            [:input {:type :text :placeholder "⌨️" :value @text-state
+                     :class "px-3 py-3 placeholder-blueGray-300 text-blueGray-600 relative bg-white bg-white rounded text-sm border border-blueGray-300 outline-none focus:outline-none focus:ring w-full"
+                     :on-input #(reset! text-state (.. % -target -value))}])))
+
+(comment
+  @text-state)
+
 {::clerk/visibility {:result :show}}
 
-(clerk/html [:div [:span {:class "font-bold"} "Type three or more letters of a regex!"]])
-^{:nextjournal.clerk/viewer text-input}
+^{::clerk/sync true ::clerk/viewer text-input}
 (defonce text-state (atom ""))
 
-^::clerk/no-cache
+(clerk/html [:div [:span {:class "font-bold"} "Type three or more letters of a regex!"]])
+
 (clerk/html
  (let [pat (re-pattern @text-state)
        filtered-words (if (> 3 (count @text-state)) []

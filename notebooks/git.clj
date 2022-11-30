@@ -19,13 +19,12 @@
 {:nextjournal.clerk/visibility {:result :show}}
 
 (clerk/with-viewer
- {:transform-fn (comp v/mark-presented
-                      (v/update-val (partial map
-                                             (fn [c]
-                                               (update (select-keys c [:id :changed_files :time])
-                                                       :time #(subs (str %) 4 10))))))
-  :render-fn '(fn [commits]
-                (v/html
+  {:transform-fn (comp v/mark-presented
+                       (v/update-val (partial map
+                                              (fn [c]
+                                                (update (select-keys c [:id :changed_files :time])
+                                                        :time #(subs (str %) 4 10))))))
+   :render-fn '(fn [commits]
                  [:div.min-h-screen.py-6.flex.flex-col.justify-center.sm:py-12.font-sans
                   [:div.py-3.sm:max-w-xl.sm:mx-auto.w-full.px-2.sm:px-0
                    (into
@@ -54,5 +53,5 @@
                                                               :else "black")} filename [:br]])
                                        (:changed_files c)))]]]])
                           (range)
-                          commits))]]))}
+                          commits))]])}
  commits)

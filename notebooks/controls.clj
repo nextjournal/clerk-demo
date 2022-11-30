@@ -1,8 +1,7 @@
 ;; # Controls! 🎛
 ^{:nextjournal.clerk/visibility {:code :hide}}
 (ns ^:nextjournal.clerk/no-cache controls
-  (:require [clojure.string :as str]
-            [nextjournal.clerk :as clerk]))
+  (:require [nextjournal.clerk :as clerk]))
 
 ;; As we've seen in other notebooks, anyone using Clerk can extend the
 ;; viewers however they like without changing the source code of Clerk
@@ -12,14 +11,14 @@
 ;; number as a slider like this:
 
 (def slider
-  {:pred ::clerk/var-from-def
+  {:var-from-def? true
    :transform-fn (comp clerk/mark-presented
                        (clerk/update-val (fn [{::clerk/keys [var-from-def]}]
                                            {:var-name (symbol var-from-def) :value @@var-from-def})))
    :render-fn '(fn [{:keys [var-name value]}]
-                 (v/html [:input {:type :range
-                                  :initial-value value
-                                  :on-change #(v/clerk-eval `(reset! ~var-name (Integer/parseInt ~(.. % -target -value))))}]))})
+                 [:input {:type :range
+                          :initial-value value
+                          :on-change #(v/clerk-eval `(reset! ~var-name (Integer/parseInt ~(.. % -target -value))))}])})
 
 ;; And then assign is to a particular atom like this:
 ^{::clerk/viewer slider}
@@ -38,10 +37,9 @@
 ;; with comments inline to help explain how everything works:
 
 (def text-input
-  ;; We assign a predicate (i.e. `:pred`) function for this viewer,
-  ;; which in this case just checks to see if there's a `var-from-def`
-  ;; (that is, the form Clerk is evaluating defines a var).
-  {:pred ::clerk/var-from-def
+  ;; We're telling Clerk to opt-out of the default behaviour (acting on the value held by
+  ;; the var) and return a map containing the actual var object instead.
+  {:var-from-def? true
 
    ;; When we specify a `:transform-fn`, it gets run on the JVM side
    ;; to pre-process our value before sending it to the front-end. In
@@ -70,11 +68,11 @@
    ;; front- and back- ends of the system is extremely
    ;; powerful — thanks, Lisp!
    :render-fn '(fn [{:keys [var-name value]}]
-                 (v/html [:input {:type :text
-                                  :placeholder "⌨️"
-                                  :initial-value value
-                                  :class "px-3 py-3 placeholder-blueGray-300 text-blueGray-600 relative bg-white bg-white rounded text-sm border border-blueGray-300 outline-none focus:outline-none focus:ring w-full"
-                                  :on-input #(v/clerk-eval `(reset! ~var-name ~(.. % -target -value)))}]))})
+                 [:input {:type :text
+                          :placeholder "⌨️"
+                          :initial-value value
+                          :class "px-3 py-3 placeholder-blueGray-300 text-blueGray-600 relative bg-white bg-white rounded text-sm border border-blueGray-300 outline-none focus:outline-none focus:ring w-full"
+                          :on-input #(v/clerk-eval `(reset! ~var-name ~(.. % -target -value)))}])})
 
 ^{::clerk/viewer text-input}
 (defonce text-state (atom ""))

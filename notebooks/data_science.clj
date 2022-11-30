@@ -182,7 +182,7 @@
 (clerk/table world-happiness)
 
 ;; Next, we're computing a linear regression for this dataset using [kixi.stats](https://github.com/MastodonC/kixi.stats).
-^{::clerk/viewer kixi-p/parameters}
+^{::clerk/viewer {:transform-fn (clerk/update-val kixi-p/parameters)}}
 (def linear-regression
   (transduce identity (kixi-stats/simple-linear-regression :score :gdp) world-happiness))
 

@@ -32,7 +32,7 @@
 
 ;; On the other hand, smaller images are centered and shown using
 ;; their intrinsic dimensions:
-(ImageIO/read (URL. "https://etc.usf.edu/clipart/36600/36667/thermos_36667_sm.gif"))
+(ImageIO/read (URL. "https://nextjournal.com/data/QmeyvaR3Q5XSwe14ZS6D5WBQGg1zaBaeG3SeyyuUURE2pq?filename=thermos.gif&content-type=image/gif"))
 
 ;; If you find yourself using a library that returns images as a
 ;; `ByteArray`, you can read the image into a `BufferedImage` by
