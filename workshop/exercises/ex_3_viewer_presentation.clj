@@ -9,13 +9,13 @@
 (clerk/with-viewer viewer/sequential-viewer
   (range 100))
 
-(clerk/with-viewers (mapv (fn [v] v) (viewer/get-default-viewers))
+(clerk/with-viewers (mapv (fn [v] ,,,v) (viewer/get-default-viewers))
   [{:hello (range 100)}])
 
 ;; ## Presentation
 (def edn-value-viewer
   {:render-fn '(fn [x]
-                 (v/html [:pre (pr-str x)]))})
+                 [:pre (pr-str x)])})
 
 ;; Note now Clerk transforms this value. Call `viewer/present` at the REPL to explore how presentation works. Try plugging in different values so you see the effect of elisions as well.
 
