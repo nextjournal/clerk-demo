@@ -1,13 +1,11 @@
 (ns user
   (:require [nextjournal.clerk :as clerk]))
 
-(clerk/serve! {:browse? true :port 6677})
+(clerk/serve! {:browse? true})
 
 (comment
-  ;; start without file watcher, open browser when started
-
   ;; start with file watcher for these sub-directory paths
-  (clerk/serve! {:watch-paths ["notebooks" "src"]})
+  (clerk/serve! {:watch-paths ["notebooks" "workshop"] :browse? true})
 
   ;; start with file watcher and a `show-filter-fn` function to watch
   ;; a subset of notebooks
