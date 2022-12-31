@@ -58,12 +58,12 @@
  {:data {:values life-expectancy}
   :width 700
   :height 500
-  :mark {:type "point"
-         :tooltip {:field "Country"}}
+  :mark {:type :point}
   :encoding {:x {:field :gdp
                  :type :quantitative}
              :y {:field :life-expectancy
-                 :type :quantitative}}})
+                 :type :quantitative}
+             :tooltip {:field :country}}})
 
 ;; Unsurprisingly, it seems that living in an extremely poor country
 ;; has negative consequences for life expectancy. On the other hand,
@@ -122,29 +122,29 @@
  {:data {:values expectancy-and-gini}
   :width 600
   :height 1600
-  :mark {:type "point"
-         :tooltip {:field :country}}
+  :mark {:type :point}
   :encoding {:x {:field :gini
                  :type :quantitative}
              :y {:field :country
                  :type :nominal
-                 :sort "x"}}})
+                 :sort :x}
+             :tooltip {:field :country}}})
 
 ;; And now to have a look at whether inequality and life expectancy
 ;; are correlated:
 (clerk/vl
  {:data {:values expectancy-and-gini}
-  :mark "rect"
+  :mark :rect
   :width 700
   :height 500
   :encoding {:x {:bin {:maxbins 25}
                  :field :life-expectancy
-                 :type "quantitative"}
+                 :type :quantitative}
              :y {:bin {:maxbins 25}
                  :field :gini
-                 :type "quantitative"}
-             :color {:aggregate "count" :type "quantitative"}}
-  :config {:view {:stroke "transparent"}}})
+                 :type :quantitative}
+             :color {:aggregate :count :type :quantitative}}
+  :config {:view {:stroke :transparent}}})
 
 ;; It seems like the mass of long lived countries are also in the
 ;; lower two thirds of the inequality distribution. A little filtering
@@ -201,14 +201,14 @@
  {:data {:values world-happiness+regression}
   :width 700
   :height 500
-  :layer [{:mark {:type "point"
-                  :tooltip {:field :country}}
+  :layer [{:mark {:type :point}
            :encoding {:x {:field :score
                           :type :quantitative
                           :scale {:zero false}}
                       :y {:field :gdp
-                          :type :quantitative}}}
-          {:mark {:type "line" :color "#ccc"}
+                          :type :quantitative}
+                      :tooltip {:field :country}}}
+          {:mark {:type :line :color "#ccc"}
            :encoding {:x {:field :score
                           :type :quantitative
                           :scale {:zero false}}
@@ -241,14 +241,14 @@
                       (take 20))}
   :width 700
   :height 500
-  :mark {:type "point"
-         :tooltip {:field :country}}
+  :mark {:type :point}
   :encoding {:x {:field :score
                  :type :quantitative
                  :scale {:zero false}}
              :y {:field :gini
                  :type :quantitative
-                 :scale {:zero false}}}})
+                 :scale {:zero false}}
+             :tooltip {:field :country}}})
 
 ;; This does, at least at first glance, support the notion that the
 ;; happiest people — just like the longest lived ones — tend to
