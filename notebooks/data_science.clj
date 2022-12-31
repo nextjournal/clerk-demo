@@ -9,7 +9,6 @@
             [meta-csv.core :as csv]
             [next.jdbc :as jdbc]
             [next.jdbc.result-set :as rs]
-            [next.jdbc.sql :as sql]
             [nextjournal.clerk :as clerk]))
 
 ;; # Exploring the world in data
