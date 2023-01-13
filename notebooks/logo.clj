@@ -86,8 +86,7 @@
   [:ellipse {:cx 500 :cy 300 :rx 11 :ry 11 :stroke "none" :fill "rgb(147.0 189.0 154.0)"}] ; the pupil
   [:ellipse {:cx 490 :cy 300 :rx 11 :ry 11 :stroke "none" :fill "rgb(147.0 189.0 154.0)"}]
   [:ellipse {:cx 510 :cy 300 :rx 11 :ry 11 :stroke "none" :fill "rgb(147.0 189.0 154.0)"}]
-  (let [
-        points (map #(-> [(- (first %) 400) (- (second %) 400)] ; -[½w ½h] to center the curve
+  (let [points (map #(-> [(- (first %) 400) (- (second %) 400)] ; -[½w ½h] to center the curve
                          complex-square   ; square each vector as a complex number
                          (v* 0.0015))     ; scale those squared vectors down
                     hilbert-points)]
