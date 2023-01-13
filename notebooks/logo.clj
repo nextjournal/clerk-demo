@@ -1,16 +1,8 @@
 ;; # 🎨 Making a Clerk Logo
 ^{:nextjournal.clerk/visibility {:code :fold}}
 (ns logo
-  "A notebook generating the Clerk's logo.
-
-  Note that to run this, the  `:clojure2d` needs to be added."
-  (:require [nextjournal.clerk :as clerk]
-            [clojure2d.core :as c2d]
-            [fastmath.complex :as complex]
-            [fastmath.vector :as v]))
-
-^{:nextjournal.clerk/visibility {:code :hide :result :hide}}
-(System/setProperty "java.awt.headless" "true")
+  "A notebook generating the Clerk's logo."
+  (:require [nextjournal.clerk :as clerk]))
 
 ;; The new Clerk header image is made from a fifth order [Hilbert
 ;; Curve](https://en.wikipedia.org/wiki/Hilbert_curve), so we will
@@ -21,8 +13,8 @@
    (hilbert-curve 0 0 x-size 0 0 y-size order))
   ([x y xi xj yi yj n]
    (if (<= n 0)
-     [(v/vec2 (+ x (/ (+ xi yi) 2.0))
-              (+ y (/ (+ xj yj) 2.0)))]
+     [[(+ x (/ (+ xi yi) 2.0))
+       (+ y (/ (+ xj yj) 2.0))]]
      (mapcat (partial apply hilbert-curve)
              [[x y (/ yi 2.0) (/ yj 2.0) (/ xi 2.0) (/ xj 2.0) (dec n)]
               [(+ x (/ xi 2.0)) (+ y (/ xj 2.0)) (/ xi 2.0) (/ xj 2.0) (/ yi 2.0) (/ yj 2.0) (dec n)]
@@ -33,43 +25,76 @@
 (def hilbert-points
   (hilbert-curve 800 800 5))
 
-;; But they're much more interesting if we use
-;; [Clojure2D](https://github.com/Clojure2D/clojure2d) canvas to draw
-;; a path made from points to show the complete curve:
-(c2d/with-canvas-> (c2d/canvas 800 800 :highest)
-  (c2d/set-background 255 255 255)
-  (c2d/set-color 66 66 66)
-  (c2d/set-stroke 4)
-  (c2d/path hilbert-points)
-  c2d/to-image) 
+;; But they're much more interesting if we use the browser's built-in
+;; support for SVG to draw a path made from points to show the
+;; complete curve. First, we'll make a little helper function to
+;; convert a sequence of points into an SVG path:
+
+(defn points->path
+  "Turn a sequence of points into an SVG path string."
+  [[[start-x start-y] & pts]]
+  (reduce str
+          (str "M " start-x "," start-y)
+          (map (fn [[x y]] (str " L" x "," y)) pts)))
+
+;; And then we'll use that to visualize the curve:
+
+(clerk/html
+ [:svg {:stroke "#666666"
+        :stroke-width 4
+        :fill "none"
+        :viewBox "0 0 800 800"}
+  [:path {:d (points->path hilbert-points)}]])
 
 ;; The trick to getting the effect we want is to apply a conformal
 ;; mapping to the original Hilbert Curve to convert it into an 👁 shape
 ;; in celebration of Clerk's viewers. We can do this by treating the
 ;; original point coordinates as complex numbers, squaring them, then
 ;; taking the real and imaginary portions of each of those complex
-;; numbers as the _x_ and _y_ coordinates of a new set of points. This
-;; is made especially easy because Clojure2D happens to include the
-;; author's [Fastmath](https://github.com/generateme/fastmath)
-;; library. 🎉
+;; numbers as the _x_ and _y_ coordinates of a new set of points. To
+;; make this work, we'll use a couple of helper functions to perform
+;; those calculations:
 
-(c2d/with-canvas-> (c2d/canvas 1000 600 :highest)
-  (c2d/set-background 33.0 5.0 24.0) ; RGB deep purple
-  (c2d/translate 500 300)            ; origin to center
-  (c2d/rotate (/ Math/PI 2))         ; rotate the canvas, ⬯ → ⬭
-  ;; colour and stroke width
-  (c2d/set-color 147.0 189.0 154.0)
-  (c2d/set-stroke 4)
-  ;; ellipses to fill in the center of the "eye"
-  (c2d/ellipse 0 0 22 22)
-  (c2d/ellipse 0 -10 20 20)
-  (c2d/ellipse 0 10 20 20)
-  ;; draw a path using the complex square of our hilbert curve points
-  (c2d/path (map #(-> (v/sub % (v/vec2 400 400)) ; -[½w ½h] from vectors to center the curve
-                      complex/sq                 ; square each vector as a complex number
-                      (v/mult 0.0015))           ; scale those squared vectors down          
-                 hilbert-points))
-  c2d/to-image)
+(defn complex-multiply
+  "Multiply two complex numbers."
+  [z1 z2]
+  [(- (* (first z1) (first z2))
+      (* (second z1) (second z2)))
+   (+ (* (first z1) (second z2))
+      (* (second z1) (first z2)))])
+
+(defn complex-square
+  "Square a complex number."
+  [z]
+  (complex-multiply z z))
+
+;; And a helpers for multiplying a vector by a scalar:
+
+(defn v*
+  "Multiply vector `v` by scalar `s`."
+  [v s]
+  [(* (first v) s) (* (second v) s)])
+
+;; After which we can generate the complete logo:
+
+(clerk/html
+ [:svg {:stroke "rgb(147.0 189.0 154.0)"
+        :stroke-width 4
+        :fill "none"
+        :viewBox "0 0 1000 600"}
+  [:rect {:width 1000 :height 600 :stroke "none" :fill "rgb(33.0 5.0 24.0)"}] ; deep purple bg
+  [:ellipse {:cx 500 :cy 300 :rx 11 :ry 11 :stroke "none" :fill "rgb(147.0 189.0 154.0)"}] ; the pupil
+  [:ellipse {:cx 490 :cy 300 :rx 11 :ry 11 :stroke "none" :fill "rgb(147.0 189.0 154.0)"}]
+  [:ellipse {:cx 510 :cy 300 :rx 11 :ry 11 :stroke "none" :fill "rgb(147.0 189.0 154.0)"}]
+  (let [
+        points (map #(-> [(- (first %) 400) (- (second %) 400)] ; -[½w ½h] to center the curve
+                         complex-square   ; square each vector as a complex number
+                         (v* 0.0015))     ; scale those squared vectors down
+                    hilbert-points)]
+    [:path {:transform "rotate(90) translate(300,-500)" ; rotate and center "eye"
+            :stroke-linejoin "round"
+            :stroke-linecap "round"
+            :d (points->path points)}])])
 
 ;; What I find so special and enchanting about the $$w = z^{2}$$
 ;; mapping that we're using here is that it maintains the angle of

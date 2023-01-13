@@ -23,7 +23,6 @@
         io.github.jackrusher/mundaneum {:git/sha "d2c934a12388d88ddb3e53fef92ec2eef97d6140"}
         arrowic/arrowic {:mvn/version "0.1.1"}
 
-
         ;; OSC server
         com.illposed.osc/javaosc-core      {:mvn/version "0.8" :exclusions [org.slf4j/slf4j-api org.slf4j/slf4j-log4j12]}
 
@@ -35,7 +34,6 @@
  :aliases {:nextjournal/clerk {:extra-paths ["datasets"]
                                :exec-fn nextjournal.clerk/build!
                                ;; notebooks to be built, accepts globs patterns
-                               :nextjournal.clerk/aliases [:clojure2d]
                                :exec-args {:git/url "https://github.com/nextjournal/clerk-demo"
                                            :paths ["index.md"
                                                    "notebooks/slideshow.md"
@@ -47,5 +45,4 @@
                                                    "notebooks/sicmutils.clj"
                                                    "notebooks/rule_30.clj"
                                                    "notebooks/zipper_with_scars.clj"]}
-                               :main-opts ["-m" "babashka.cli.exec"]}
-           :clojure2d {:extra-deps {clojure2d/clojure2d {:mvn/version "1.4.4"}}}}}
+                               :main-opts ["-m" "babashka.cli.exec"]}}}
