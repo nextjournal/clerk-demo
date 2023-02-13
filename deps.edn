@@ -1,7 +1,13 @@
 {:paths ["dev" "notebooks" "resources"]
+ :mvn/repos {"central" {:url "https://repo1.maven.org/maven2/"}
+             "clojars" {:url "https://clojars.org/repo"}}
  :deps {io.github.nextjournal/clerk {:git/sha "6c710b552f7b3591e34c93ea635c435a7e35231e"}
         io.github.nextjournal/clerk-slideshow {:git/sha "5fe197ca0c8f28128379849dc677cd718be71524"}
 
+        ;; python integration
+        ; clj-python/libpython-clj {:mvn/version "1.37"}
+        org.clojure/data.csv {:mvn/version "0.1.4"}
+        ;; /python integration
         ;; keep 1.10 until `kixi/stats` and `sicmutils` fix warnings
         org.clojure/clojure {:mvn/version "1.10.3"}
 
@@ -22,6 +28,7 @@
         ;; semantic web goodies and box/arrow graphs
         io.github.jackrusher/mundaneum {:git/sha "d2c934a12388d88ddb3e53fef92ec2eef97d6140"}
         arrowic/arrowic {:mvn/version "0.1.1"}
+        clj-python/libpython-clj {:mvn/version "2.024"}
 
         ;; OSC server
         com.illposed.osc/javaosc-core      {:mvn/version "0.8" :exclusions [org.slf4j/slf4j-api org.slf4j/slf4j-log4j12]}
@@ -45,4 +52,12 @@
                                                    "notebooks/sicmutils.clj"
                                                    "notebooks/rule_30.clj"
                                                    "notebooks/zipper_with_scars.clj"]}
-                               :main-opts ["-m" "babashka.cli.exec"]}}}
+                               :main-opts ["-m" "babashka.cli.exec"]}
+           :test {:extra-paths ["test"]
+                  :extra-deps {org.clojure/test.check {:mvn/version "0.10.0"}}}
+           :runner
+           {:extra-deps {com.cognitect/test-runner
+                         {:git/url "https://github.com/cognitect-labs/test-runner"
+                          :sha "f7ef16dc3b8332b0d77bc0274578ad5270fbfedd"}}
+            :main-opts ["-m" "cognitect.test-runner"
+                        "-d" "test"]}}}
