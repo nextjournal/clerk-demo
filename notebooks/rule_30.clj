@@ -23,9 +23,9 @@
    :render-fn '(fn [n] [:div.inline-block {:style {:width 16 :height 16}
                                            :class (if (pos? n) "bg-black" "bg-white border-solid border-2 border-black")}])}
   {:pred (every-pred list? (partial every? (some-fn number? vector?)))
-   :render-fn '(fn [rows opts] (into [:div.flex.flex-col] (v/inspect-children opts) rows))}
+   :render-fn '(fn [rows opts] (into [:div.flex.flex-col] (nextjournal.clerk.render/inspect-children opts) rows))}
   {:pred (every-pred vector? (complement map-entry?) (partial every? number?))
-   :render-fn '(fn [row opts] (into [:div.flex.inline-flex] (v/inspect-children opts) row))}])
+   :render-fn '(fn [row opts] (into [:div.flex.inline-flex] (nextjournal.clerk.render/inspect-children opts) row))}])
 
 ;; Now let's test each one to make sure they look the way we want:
 
