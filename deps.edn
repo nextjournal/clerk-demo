@@ -1,6 +1,6 @@
 {:paths ["dev" "notebooks" "resources"]
  :deps {io.github.nextjournal/clerk {:git/sha "fad499407d979916d21b33cc7e46e73f7a485e37"}
-        io.github.nextjournal/clerk-slideshow {:git/sha "562f634494a1e1a9149ed78d5d39fd9486cc00ba"}
+        io.github.nextjournal/clerk-slideshow {:git/sha "5fe197ca0c8f28128379849dc677cd718be71524"}
 
         ;; keep 1.10 until `kixi/stats` and `sicmutils` fix warnings
         org.clojure/clojure {:mvn/version "1.10.3"}
