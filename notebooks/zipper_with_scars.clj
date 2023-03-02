@@ -68,7 +68,7 @@
                 (comp (some-fn nil? :changed? :ppath :pnodes)
                       second)))
   (def zip-location-viewer
-    {:transform-fn (comp v/html (v/update-val #(-> % ->graph ->svg)))
+    {:transform-fn (comp nextjournal.clerk.viewer/html (v/update-val #(-> % ->graph ->svg)))
      :pred zipper?})
 
   (def zip-reel-viewer
@@ -86,7 +86,7 @@
                        [:div.flex.items-left
                         [:div.flex.mr-5 {:style {:font-size "1.5rem"}}
                          [:div.cursor-pointer {:on-click #(swap! !state update :reel? not)} ({true "⏹" false "▶️"} reel?)]]
-                        [v/html (frames (if reel? idx (dec frame-count)))]])))})
+                        [nextjournal.clerk.viewer/html (frames (if reel? idx (dec frame-count)))]])))})
   (defn reset-reel [zloc] (vary-meta zloc assoc :frames [] :cut? false))
   (defn add-frame [zloc] (vary-meta zloc update :frames (fnil conj []) zloc))
   (defn cut [zloc] (vary-meta zloc assoc :cut? true))

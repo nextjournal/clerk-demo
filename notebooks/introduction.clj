@@ -247,7 +247,7 @@
                                       {:nextjournal/presented? true
                                        :nextjournal/content-type "image/png"
                                        :nextjournal/value bytes})
-                      :render-fn '(fn [blob] [:img {:src (v/url-for blob)}])}])
+                      :render-fn '(fn [blob] [:img {:src (nextjournal.clerk.viewer/url-for blob)}])}])
 
 
 (.. (HttpClient/newHttpClient)
