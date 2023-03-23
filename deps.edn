@@ -16,8 +16,8 @@
         ;; some statistical routines
         kixi/stats {:mvn/version "0.5.4"}
 
-        ;; SICMUtils numerical and physics routines
-        sicmutils/sicmutils {:mvn/version "0.22.0"}
+        ;; Emmy numerical and physics routines
+        io.github.mentat-collective/emmy {:git/sha "b98fef51d80d3edcff3100562b929f9980ff34d7"}
 
         ;; semantic web goodies and box/arrow graphs
         io.github.jackrusher/mundaneum {:git/sha "d2c934a12388d88ddb3e53fef92ec2eef97d6140"}
@@ -42,7 +42,7 @@
                                                    "notebooks/images.clj"
                                                    "notebooks/logo.clj"
                                                    "notebooks/semantic.clj"
-                                                   "notebooks/sicmutils.clj"
+                                                   "notebooks/emmy.clj"
                                                    "notebooks/rule_30.clj"
                                                    "notebooks/zipper_with_scars.clj"]}
                                :main-opts ["-m" "babashka.cli.exec"]}}}

@@ -39,7 +39,7 @@
         :description "Some examples about dealing with images."}
        {:title "The double pendulum"
         :preview "https://cdn.nextjournal.com/data/Qmdhk9WEogAvH9cgehnpq3REkATa91JiWgYNUtoSW74Q9A?filename=CleanShot%202021-11-30%20at%2018.45.46@2x.png&content-type=image/png"
-        :path "notebooks/sicmutils.clj"
+        :path "notebooks/emmy.clj"
         :description "Simulate and visualize physical systems from the REPL."}
        {:title "Rule 30"
         :preview "https://cdn.nextjournal.com/data/QmQCrqkdYtKfNm9CGbXhzY4cy6qG8xhpWaCRPF5m6biLgV?filename=CleanShot%202021-11-30%20at%2018.46.55@2x.png&content-type=image/png"
