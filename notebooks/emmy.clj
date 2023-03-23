@@ -4,16 +4,18 @@
 ;; 1.44](https://tgvaughan.github.io/sicm/chapter001.html#Exe_1-44) from Sussman
 ;; and Wisdom's [Structure and Interpretation of Classical
 ;; Mechanics](https://tgvaughan.github.io/sicm/), using
-;; the [SICMUtils](https://github.com/sicmutils/sicmutils) Clojure library and
+;; the [Emmy](https://github.com/mentat-collective/emmy) Clojure library and
 ;; the Clerk rendering environment.
 
 #_{:clj-kondo/ignore [:refer-all]}
-(ns sicmutils
+(ns emmy
   (:refer-clojure
-   :exclude [+ - * / partial ref zero? numerator denominator compare = run!])
+   :exclude [+ - * / partial ref zero? numerator denominator compare = run!
+             abs infinite?])
   (:require [nextjournal.clerk :as clerk]
-            [sicmutils.env :as e :refer :all]
-            [sicmutils.expression.render :as xr]))
+            [emmy.env :as e :refer :all]
+            [emmy.expression.compile :as xc]
+            [emmy.expression.render :as xr]))
 
 ;; ## Lagrangian
 ;;
@@ -38,7 +40,6 @@
                     (square ydot1)))
        (* 1/2 m2 (+ (square xdot2)
                     (square ydot2))))))
-
 
 ;; `V` describes a uniform gravitational potential with coefficient `g`, acting
 ;; on two particles with masses of, respectively, `m1` and `m2`. Again, this is
@@ -86,6 +87,8 @@
 
 ;; And here are the equations of motion for the system:
 
+;; TODO this currently causes a notebook failure.
+#_
 (let [L (L-double-pendulum 'm_1 'm_2 'l_1 'l_2 'g)]
   (binding [xr/*TeX-vertical-down-tuples* true]
     (render-eq
@@ -172,7 +175,8 @@
 ;; state. Chaotic first:
 
 (def raw-chaotic-data
-  (run! step horizon chaotic-initial-q))
+  (time
+   (run! step horizon chaotic-initial-q)))
 
 ;; Looks good:
 
@@ -181,11 +185,13 @@
 ;; Next, the regular initial condition:
 
 (def raw-regular-data
-  (run! step horizon regular-initial-q))
+  (time
+   (run! step horizon regular-initial-q)))
 
 ;; Peek at the final state:
 
 (peek raw-regular-data)
+
 
 ;; ## Measurements, Data Transformation
 
@@ -225,8 +231,16 @@
 #_{:clj-kondo/ignore [:unresolved-symbol]}
 (defn transform-data [xs]
   (let [energy-fn (L-energy m1 m2 l1 l2 g)
-        monitor   (energy-monitor energy-fn (first xs))
-        xform     (angles->rect l1 l2)
+        monitor   (xc/compile-state-fn
+                   (energy-monitor energy-fn (first xs))
+                   false
+                   (first xs)
+                   {:calling-convention :structure})
+        xform     (xc/compile-state-fn
+                   (angles->rect l1 l2)
+                   false
+                   (first xs)
+                   {:calling-convention :structure})
         pv        (principal-value Math/PI)]
     (map (fn [[t [theta1 theta2] [thetadot1 thetadot2] :as state]]
            (let [[x1 y1 x2 y2] (xform state)]
@@ -245,11 +259,11 @@
 ;; The following forms transform the raw data for each initial condition and
 ;; bind the results to `chaotic-data` and `regular-data` for exploration.
 
-(def chaotic-data
+(defonce chaotic-data
   (doall
    (transform-data raw-chaotic-data)))
 
-(def regular-data
+(defonce regular-data
   (doall
    (transform-data raw-regular-data)))
 
@@ -307,9 +321,9 @@
 ;; a helper function that should be in clojure.core
 (defn deep-merge [v & vs]
   (letfn [(rec-merge [v1 v2]
-                     (if (and (map? v1) (map? v2))
-                       (merge-with deep-merge v1 v2)
-                       v2))]
+            (if (and (map? v1) (map? v2))
+              (merge-with deep-merge v1 v2)
+              v2))]
     (when (some identity vs)
       (reduce #(rec-merge %1 %2) v vs))))
 
@@ -439,9 +453,9 @@
 (defn L-double-double-pendulum [m1 m2 l1 l2 g]
   (fn [[t [thetas1 thetas2] [qdots1 qdots2]]]
     (let [s1 (up t thetas1 qdots1)
-            s2 (up t thetas2 qdots2)]
-        (+ ((L-double-pendulum m1 m2 l1 l2 g) s1)
-           ((L-double-pendulum m1 m2 l1 l2 g) s2)))))
+          s2 (up t thetas2 qdots2)]
+      (+ ((L-double-pendulum m1 m2 l1 l2 g) s1)
+         ((L-double-pendulum m1 m2 l1 l2 g) s2)))))
 
 (def dd-state-derivative
   (compose
