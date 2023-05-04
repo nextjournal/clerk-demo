@@ -1,5 +1,5 @@
 {:paths ["dev" "notebooks" "resources"]
- :deps {io.github.nextjournal/clerk {:git/sha "56bb0fa5e4f21d70f3ac763dc13ad1ab28164d8d"}
+ :deps {io.github.nextjournal/clerk {:git/sha "096befc116483250a45c3604d083d5a9d6a3b4b4"}
         io.github.nextjournal/clerk-slideshow {:git/sha "f9fb86430ebf533bfc9d5cec5bf0a94ed07146f3"}
 
         ;; keep 1.10 until `kixi/stats` and `sicmutils` fix warnings
@@ -45,4 +45,7 @@
                                                    "notebooks/sicmutils.clj"
                                                    "notebooks/rule_30.clj"
                                                    "notebooks/zipper_with_scars.clj"]}
-                               :main-opts ["-m" "babashka.cli.exec"]}}}
+                               :main-opts ["-m" "babashka.cli.exec"]}
+
+           :nextjournal/launch {:exec-fn nextjournal.clerk/serve!
+                                :exec-args {:browse? false}}}}
