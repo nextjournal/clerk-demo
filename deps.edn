@@ -1,5 +1,5 @@
 {:paths ["dev" "notebooks" "resources"]
- :deps {io.github.nextjournal/clerk {:git/sha "096befc116483250a45c3604d083d5a9d6a3b4b4"}
+ :deps {io.github.nextjournal/clerk {:git/sha "4b959dff5c26d0edba14456f2061ec639af7f11b"}
         io.github.nextjournal/clerk-slideshow {:git/sha "f9fb86430ebf533bfc9d5cec5bf0a94ed07146f3"}
 
         ;; keep 1.10 until `kixi/stats` and `sicmutils` fix warnings
