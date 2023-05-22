@@ -29,6 +29,7 @@
         org.babashka/cli {:mvn/version "0.5.40"}
 
         ;; silence log warnings
+        #_#_
         org.slf4j/slf4j-nop {:mvn/version "1.7.36"}}
 
  :aliases {:nextjournal/clerk {:extra-paths ["datasets"]
