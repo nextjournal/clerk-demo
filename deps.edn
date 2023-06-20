@@ -26,7 +26,7 @@
         ;; OSC server
         com.illposed.osc/javaosc-core      {:mvn/version "0.8" :exclusions [org.slf4j/slf4j-api org.slf4j/slf4j-log4j12]}
 
-        org.babashka/cli {:mvn/version "0.5.40"}
+        org.babashka/cli {:mvn/version "0.7.52"}
 
         ;; silence log warnings
         org.slf4j/slf4j-nop {:mvn/version "1.7.36"}}
