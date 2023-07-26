@@ -34,6 +34,9 @@ jobs:
           path: .cache
           key: ${{ runner.os }}-clerk
 
+      - name: 🎨 Setup Tailwindcss
+        run: npm install -D tailwindcss @tailwindcss/typography
+
       - name: 🏗 Clerk Build
         run: clojure -X:clojure2d:nextjournal/clerk :path-prefix '"clerk-demo/build/${{ github.sha }}/"' :git/sha '"${{ github.sha }}"'
 

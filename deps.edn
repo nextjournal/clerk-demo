@@ -1,5 +1,5 @@
 {:paths ["dev" "notebooks" "resources"]
- :deps {io.github.nextjournal/clerk {:git/sha "fc6df7186bfea2571fff2dd790d0ad63f8d6295f"}
+ :deps {io.github.nextjournal/clerk {:git/sha "e6b5d108bbcc00096b08b17f6468702dd62d36db"}
         io.github.nextjournal/clerk-slideshow {:git/sha "f9fb86430ebf533bfc9d5cec5bf0a94ed07146f3"}
 
         ;; keep 1.10 until `kixi/stats` and `sicmutils` fix warnings
@@ -35,6 +35,7 @@
                                :exec-fn nextjournal.clerk/build!
                                ;; notebooks to be built, accepts globs patterns
                                :exec-args {:git/url "https://github.com/nextjournal/clerk-demo"
+                                           :compile-css? true
                                            :paths ["index.md"
                                                    "notebooks/slideshow.md"
                                                    "notebooks/introduction.clj"
