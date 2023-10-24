@@ -108,8 +108,8 @@
 
 (v/vl {:width 650 :height 650
        :config {:projection {:type "mercator" :center [10.4515 51.1657]}}
-       :layer [{:data {:url "https://raw.githubusercontent.com/deldersveld/topojson/master/countries/germany/germany-regions.json"
-                       :format {:type "topojson" :feature "DEU_adm2"}}
+       :layer [{:data {:url "https://raw.githubusercontent.com/AliceWi/TopoJSON-Germany/master/germany.json"
+                       :format {:type "topojson" :feature "states"}}
                 :mark {:type "geoshape" :fill "lightgray" :stroke "white"}}
                {:encoding {:longitude {:field "longitude" :type "quantitative"}
                            :latitude {:field "latitude" :type "quantitative"}}
