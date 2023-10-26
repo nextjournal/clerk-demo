@@ -13,7 +13,7 @@
 ;; `nextjournal.clerk.experimental`. For example, we can create a
 ;; viewer that presents an atom-wrapped number as a slider like this:
 
-;; And then assign is to a particular atom like this:
+;; And then assign it to a particular atom like this:
 ^{::clerk/sync true ::clerk/viewer cx/slider}
 (defonce bar (atom 0))
 
