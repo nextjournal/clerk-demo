@@ -50,7 +50,7 @@
 
 ;; As an example, the infinite sequence returned by `(range)` will be
 ;; loaded a little bit at a time as you click on the results. (Note
-;; the little underscore under the first paren, it lets you switch
+;; the little caret next to the first paren, it lets you switch
 ;; this sequence to a vertical rather than horizontal view).
 
 (range)
