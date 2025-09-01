@@ -2,7 +2,8 @@
 ^{:nextjournal.clerk/visibility #{:hide-ns}}
 (ns images
   (:require [nextjournal.clerk :as clerk]
-            [clojure.java.io :as io])
+            [clojure.java.io :as io]
+            [babashka.http-client :as http])
   (:import [java.net URL]
            [java.nio.file Paths Files]
            [java.awt.image BufferedImage]
@@ -17,10 +18,14 @@
 ;; `java.io.InputStream`, or any resource that a `java.net.URL` can
 ;; address.
 
-;; For example, we can fetch a photo of _De zaaier_, Vincent van
-;; Gogh's famous painting of a farmer sowing a field from Wiki
-;; Commons like this:
-(ImageIO/read (URL. "https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/The_Sower.jpg/1510px-The_Sower.jpg"))
+;; For example, we can fetch a photo of _De zaaier_, Vincent van Gogh's famous
+;; painting of a farmer sowing a field from Wiki Commons like this. Since Wiki
+;; Commons requires a User-Agent header to be set when requesting the image, we
+;; use babashka.http-client.
+(ImageIO/read
+ (-> (http/get "https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/The_Sower.jpg/1510px-The_Sower.jpg"
+               {:as :stream})
+     :body))
 
 ;; We've put some effort into making the default image rendering
 ;; pleasing. The viewer uses the dimensions and aspect ratio of each
