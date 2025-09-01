@@ -19,7 +19,7 @@ jobs:
           cli: '1.10.3.943'
 
       - name: 🗝 maven cache
-        uses: actions/cache@v2
+        uses: actions/cache@v4.2.4
         with:
           path: |
             ~/.m2
@@ -29,7 +29,7 @@ jobs:
             ${{ runner.os }}-maven-
 
       - name: 🗝 Clerk Cache
-        uses: actions/cache@v2
+        uses: actions/cache@v4.2.4
         with:
           path: .cache
           key: ${{ runner.os }}-clerk
