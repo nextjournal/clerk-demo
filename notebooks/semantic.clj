@@ -162,10 +162,11 @@
 ;; see all the languages.
 
 (-> (clerk/html
-     (let [data (query `{:select [?itemLabel ?influencedByLabel]
-                         :where [[?item (* ~(wdt :influenced-by)) ~(entity "Lisp")]
+     (let [lisp (entity "Common Lisp")
+           data (query `{:select [?itemLabel ?influencedByLabel]
+                         :where [[?item (* ~(wdt :influenced-by)) ~lisp]
                                  [?item ~(wdt :influenced-by) ?influencedBy]
-                                 [?influencedBy (* ~(wdt :influenced-by)) ~(entity "Lisp")]]})]
+                                 [?influencedBy (* ~(wdt :influenced-by)) ~lisp]]})]
        (arr/as-svg
         (arr/with-graph (arr/create-graph)
           (let [vertex (->> (mapcat (juxt :itemLabel :influencedByLabel) data)
