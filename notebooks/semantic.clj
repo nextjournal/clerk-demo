@@ -13,8 +13,8 @@
   (:require [clojure.string :as str]
             [nextjournal.clerk :as clerk]
             [nextjournal.clerk.viewer :as v]
-            [applied-science.mundaneum.properties :refer [wdt]]
-            [applied-science.mundaneum.query :refer [describe entity label query]]
+            [mundaneum.properties :refer [wdt]]
+            [mundaneum.query :refer [describe entity label query]]
             [arrowic.core :as arr]))
 
 ;; Now we can ask questions, like "what is James Clerk Maxwell famous
@@ -162,7 +162,11 @@
 ;; see all the languages.
 
 (-> (clerk/html
-     (let [lisp (entity "Common Lisp")
+     (let [lisp (-> (query `{:select [?lisp]
+                             :where [[?lisp ~(wdt :instance-of) ~(entity "metaprogramming language")]
+                                     [?lisp ~(wdt :designed-by) ~(entity "John McCarthy")]]})
+                    first
+                    :lisp)
            data (query `{:select [?itemLabel ?influencedByLabel]
                          :where [[?item (* ~(wdt :influenced-by)) ~lisp]
                                  [?item ~(wdt :influenced-by) ?influencedBy]

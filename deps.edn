@@ -20,7 +20,7 @@
         sicmutils/sicmutils {:mvn/version "0.22.0"}
 
         ;; semantic web goodies and box/arrow graphs
-        io.github.jackrusher/mundaneum {:git/sha "d2c934a12388d88ddb3e53fef92ec2eef97d6140"}
+        io.github.jackrusher/mundaneum {:git/sha "4c2dced17d813010e81b687fdba710c2dcf1f769"}
         arrowic/arrowic {:mvn/version "0.1.1"}
 
         ;; OSC server
