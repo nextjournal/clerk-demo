@@ -23,7 +23,7 @@
 ;; Commons requires a User-Agent header to be set when requesting the image, we
 ;; use babashka.http-client.
 (ImageIO/read
- (-> (http/get "https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/The_Sower.jpg/1510px-The_Sower.jpg"
+ (-> (http/get "https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/The_Sower.jpg/1280px-The_Sower.jpg"
                {:as :stream})
      :body))
 
